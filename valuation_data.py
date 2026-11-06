@@ -97,7 +97,7 @@ def get_valuation(item, as_of, force=False):
             fresh = normalize_history(response.json().get('data', []))
             if fresh.empty:
                 raise ValueError('估值历史为空')
-            history = (fresh if history.empty else pd.concat([history, fresh], ignore_index=True)).drop_duplicates('date', keep='last').sort_values('date')
+            history = (fresh if history.empty else pd.concat([fresh, history], ignore_index=True)).drop_duplicates('date', keep='last').sort_values('date')
             history.to_csv(path, index=False)
             meta_path.write_text(json.dumps({'checked_as_of': str(as_of), 'source': SOURCE}, ensure_ascii=False), encoding='utf-8')
         except Exception as exc:

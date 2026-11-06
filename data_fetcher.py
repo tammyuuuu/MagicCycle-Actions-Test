@@ -104,19 +104,23 @@ def _cache_path(code: str, source: str) -> str:
 
 
 def _expected_latest_trade_date(now: datetime = None):
-    """粗略估算“此刻数据应已可用”的最新交易日（不依赖交易日历）。
-
-    - 15:00 前：当天尚未收盘，最新可用数据算到上一工作日；
-    - 周末：顺延回最近的周五。
-    遇节假日只会“多请求一次”（拿不到新数据就沿用缓存），不会漏更新。
-    """
+    """Latest completed A-share session; reject dates outside the checked calendar."""
+    import json
+    from pathlib import Path
+    calendar = json.loads((Path(__file__).resolve().parent / "ashare_calendar.json").read_text(encoding="utf8"))
     now = now or datetime.now()
     d = now.date()
     if now.hour < 15:
         d -= timedelta(days=1)
-    while d.weekday() >= 5:
+    first = datetime.fromisoformat(calendar["valid_from"]).date()
+    last = datetime.fromisoformat(calendar["valid_through"]).date()
+    while True:
+        if not first <= d <= last:
+            raise ValueError("A股交易日历超出有效范围，请更新日历")
+        closed = any(datetime.fromisoformat(a).date() <= d <= datetime.fromisoformat(b).date() for a,b in calendar["closed_ranges"])
+        if d.weekday() < 5 and not closed:
+            return d
         d -= timedelta(days=1)
-    return d
 
 
 def _cache_is_current(cached: pd.DataFrame) -> bool:
@@ -194,8 +198,7 @@ def _stale_cache(code: str):
     if best is not None:
         return best
 
-    df = _load("sina")
-    return (df, "sina") if df is not None else (None, None)
+    return (None, None)
 
 
 # =============================================================
@@ -351,24 +354,8 @@ def fetch_etf_daily(code: str, start: str = "20150101", end: str = "20500101",
             errors.append(f"腾讯源 {type(e).__name__}: {e}")
             _mark_src(code, "tencent", False)
 
-    # ---- 备用源 2：新浪（不复权） ----
-    symbol = ("sh" if code[0] in ("5", "6") else "sz") + code
-    try:
-        path = _cache_path(code, "sina")
-        df = _load_or_fetch(
-            path,
-            lambda s, e: _retry(lambda: _clean(
-                ak.fund_etf_hist_sina(symbol=symbol), _SINA_COLUMN_MAP)),
-            start, end, use_cache, force)
-        if df is not None and not df.empty:
-            _mark_src(code, "sina", True)
-            print(f"    [提示] 东财/腾讯源不可用，已切换新浪源返回 {code}（不复权）")
-            return df
-        errors.append("新浪源返回空数据")
-        _mark_src(code, "sina", False)
-    except Exception as e:
-        errors.append(f"新浪源 {type(e).__name__}: {e}")
-        _mark_src(code, "sina", False)
+    # Do not mix the unadjusted Sina series with forward-adjusted data.
+    errors.append("新浪源未使用：不复权行情与前复权口径不一致")
 
     # ---- 三个源全挂：退回本地旧缓存 ----
     # 断网/开机没联网时，本地哪怕只差一天的数据也比整页“数据/计算失败”有用。

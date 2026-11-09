@@ -40,6 +40,16 @@ class MarketSafety(unittest.TestCase):
     def test_close_buffer(self):
         self.assertEqual(str(d._expected_latest_trade_date(datetime(2026,11,9,15,59))), "2026-11-06")
         self.assertEqual(str(d._expected_latest_trade_date(datetime(2026,11,9,16,0))), "2026-11-09")
+    def test_fallback_state_distinguishes_not_ready_and_failure(self):
+        import pandas as pd
+        old = pd.DataFrame({"close": [1.2]}, index=pd.DatetimeIndex(["2026-11-06"], name="date"))
+        with patch.object(d, "_load_or_fetch", side_effect=d.DataNotReady("waiting")), patch.object(d, "_stale_cache", return_value=(old.copy(), "eastmoney")), patch.object(d, "_src_cooling", return_value=False):
+            result = d.fetch_etf_daily("510500")
+            self.assertEqual(result.attrs["update_state"], "not_ready")
+        with patch.object(d, "_load_or_fetch", side_effect=ConnectionError("offline")), patch.object(d, "_stale_cache", return_value=(old.copy(), "eastmoney")), patch.object(d, "_src_cooling", return_value=False):
+            result = d.fetch_etf_daily("510500")
+            self.assertEqual(result.attrs["update_state"], "error")
+
     def test_calendar_expiry(self):
         with self.assertRaises(ValueError): d._expected_latest_trade_date(datetime(2027,1,4,16))
     def test_failed_sources_do_not_use_sina(self):

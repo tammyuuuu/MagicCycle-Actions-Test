@@ -7,6 +7,8 @@ Path("data_cache").mkdir(exist_ok=True)
 for seed in Path("seed").glob("*.csv"):
     target = Path("data_cache") / seed.name
     if not target.exists(): shutil.copy2(seed, target)
+expected_date = data_fetcher._expected_latest_trade_date().isoformat()
+print("最新已完成交易日:", expected_date)
 results = []
 valuation_errors = []
 try:
@@ -35,6 +37,7 @@ Path("docs").mkdir(exist_ok=True)
 versions = {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(Path("data_cache").glob("valuation*.csv"))}
 Path("docs/data-version.json").write_text(json.dumps(versions, indent=2), encoding="utf8")
 Path("docs/index.json").write_text(json.dumps(results, ensure_ascii=False, indent=2, allow_nan=False), encoding="utf8")
+print("数据验证状态:", "失败" if valuation_errors or any(x.get("status") == "error" for x in results) else "成功", "目标行情日期:", expected_date)
 print("北京时间", datetime.now(timezone(timedelta(hours=8))).isoformat(), "结果数", len(results))
 if valuation_errors or any(x.get("status") == "error" for x in results): sys.exit(1)
 

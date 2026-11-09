@@ -22,33 +22,25 @@ jobs:
         with:
           python-version: "3.11"
       - run: python -m pip install -r requirements.txt
-      - name: Check trading day
-        id: calendar
-        run: |
-          python -c "import json,datetime,os; c=json.load(open('ashare_calendar.json')); d=datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8))).date(); ds=d.isoformat(); assert c['valid_from'] <= ds <= c['valid_through'], 'Calendar expired'; closed=d.weekday() >= 5 or any(a <= ds <= b for a,b in c['closed_ranges']); open(os.environ['GITHUB_OUTPUT'],'a').write('run='+str(not closed or os.environ['GITHUB_EVENT_NAME'] != 'schedule').lower()+'\n')"
       - run: python -m unittest -v test_market_safety
-        if: steps.calendar.outputs.run == 'true'
       - uses: actions/cache/restore@v4
-        if: steps.calendar.outputs.run == 'true'
         with:
           path: data_cache
           key: valuation-v1-${{ github.run_id }}-${{ github.run_attempt }}
           restore-keys: valuation-v1-
       - run: python run_check.py
-        if: steps.calendar.outputs.run == 'true'
       - run: python build_page.py
-        if: steps.calendar.outputs.run == 'true'
       - uses: actions/cache/save@v4
-        if: steps.calendar.outputs.run == 'true'
         with:
           path: data_cache
           key: valuation-v1-${{ github.run_id }}-${{ github.run_attempt }}
       - uses: actions/upload-pages-artifact@v3
-        if: steps.calendar.outputs.run == 'true'
         with:
           path: docs
       - uses: actions/deploy-pages@v4
-        if: steps.calendar.outputs.run == 'true'
+        id: deployment
+      - name: Verify published data
+        run: python verify_published.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:

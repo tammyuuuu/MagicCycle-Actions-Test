@@ -272,11 +272,11 @@ def _load_or_fetch(path: str, fetch_fn, start: str, end: str,
     fresh = _trim_incomplete(fetch_fn(fetch_start, end))
     if fresh is None or fresh.empty:
         # 网络没返回新数据 -> 退回旧缓存
-        if cached is not None and not cached.empty:
-            return cached
-        return fresh  # 空结果交给上层判断
+        raise ValueError("行情源未返回最新交易日数据")
 
     combined = _combine(cached, fresh)
+    if not _cache_is_current(combined):
+        raise ValueError("行情源返回的数据未达到最新已收盘交易日")
     if use_cache:
         _ensure_cache_dir()
         combined.to_csv(path)

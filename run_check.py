@@ -1,5 +1,6 @@
 import json, sys, shutil, hashlib
 from datetime import datetime, timezone, timedelta
+from close_validation import validate_bar
 from pathlib import Path
 import config, data_fetcher, valuation_data, strategies
 
@@ -19,8 +20,11 @@ for item in config.TARGET_ETFS:
     try:
         prices = data_fetcher.fetch_etf_daily(item["code"], start="20100101", end="20500101")
         date = prices.index[-1].date().isoformat()
-        if prices.attrs.get("stale_note") or not data_fetcher._cache_is_current(prices):
-            raise ValueError("行情过期或使用过期缓存: " + date)
+        valid, why = validate_bar(prices, prices.index[-1].date())
+        if not valid:
+            raise ValueError("行情日期或价格无效: " + why)
+        if prices.attrs.get("update_state") == "error":
+            raise ConnectionError("行情接口或校验失败，保留原页面: " + date)
         enriched = valuation_data.attach_valuation(item, date)
         valuation = enriched.get("valuation")
         if valuation and (valuation.get("error") or valuation.get("warning")):
@@ -28,6 +32,9 @@ for item in config.TARGET_ETFS:
         if item.get("broad_strategy") == "pe_or_pb5_pe_exit" and (not enriched.get("pb_valuation_history") or enriched.get("pb_data_warning")):
             raise ValueError("PB 历史缺失或接口失败: " + str(enriched.get("pb_data_warning")))
         summary = strategies.analyze_asset(prices, enriched)
+        if summary.get("date") != date or float(summary["metrics"]["price"]) != float(prices.iloc[-1]["close"]):
+            raise ValueError("提醒数据的日期或价格与行情不一致")
+        summary["market_update"] = ("新数据尚未就绪，沿用历史数据" if prices.attrs.get("update_state") == "not_ready" else "历史交易日数据" if date != datetime.now(timezone(timedelta(hours=8))).date().isoformat() else "本交易日数据")
         results.append(summary)
         print(item["code"], "行情日期", date, "估值", json.dumps(enriched.get("valuation", {}), ensure_ascii=False), "缓存提示", prices.attrs.get("stale_note"))
     except Exception as exc:

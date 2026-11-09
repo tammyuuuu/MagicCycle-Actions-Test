@@ -27,6 +27,7 @@ import pandas as pd
 import requests
 
 from config import ADJUST, CACHE_DIR
+from close_validation import validate_bar
 
 # akshare 内部有请求不带 timeout（如新浪源），网络半死时会一直挂着不返回。
 # 设一个全局 socket 默认超时，保证任何请求最终都会失败退出，而不是卡死整个刷新。
@@ -110,7 +111,7 @@ def _expected_latest_trade_date(now: datetime = None):
     calendar = json.loads((Path(__file__).resolve().parent / "ashare_calendar.json").read_text(encoding="utf8"))
     now = now or datetime.now()
     d = now.date()
-    if now.hour < 15:
+    if (now.hour, now.minute) < (16, 0):
         d -= timedelta(days=1)
     first = datetime.fromisoformat(calendar["valid_from"]).date()
     last = datetime.fromisoformat(calendar["valid_through"]).date()
@@ -248,6 +249,10 @@ def _fetch_tencent(code: str, start: str, end: str) -> pd.DataFrame:
     return _clean(df, {})         # 列名已是英文，无需 rename
 
 
+class DataNotReady(Exception):
+    """A reachable provider has not yet supplied the requested session."""
+
+
 def _load_or_fetch(path: str, fetch_fn, start: str, end: str,
                    use_cache: bool, force: bool) -> pd.DataFrame:
     """
@@ -263,7 +268,7 @@ def _load_or_fetch(path: str, fetch_fn, start: str, end: str,
         # 判定依据是“缓存里的数据日期”，不是文件修改时间：
         # 只要已包含最近一个应已收盘的交易日就直接复用，
         # 否则（哪怕文件刚写过不久）也做一次增量补齐，避免数据停在旧日期。
-        if _cache_is_current(cached):
+        if _cache_is_current(cached) and validate_bar(cached, _expected_latest_trade_date())[0]:
             return cached
 
     fetch_start = (cached.index.max() + timedelta(days=1)).strftime("%Y%m%d") \
@@ -272,11 +277,14 @@ def _load_or_fetch(path: str, fetch_fn, start: str, end: str,
     fresh = _trim_incomplete(fetch_fn(fetch_start, end))
     if fresh is None or fresh.empty:
         # 网络没返回新数据 -> 退回旧缓存
-        raise ValueError("行情源未返回最新交易日数据")
+        raise DataNotReady("行情源未返回最新交易日数据")
 
     combined = _combine(cached, fresh)
-    if not _cache_is_current(combined):
-        raise ValueError("行情源返回的数据未达到最新已收盘交易日")
+    valid, reason = validate_bar(combined, _expected_latest_trade_date())
+    if not valid:
+        if reason == "not_ready":
+            raise DataNotReady("行情源尚未提供最新交易日数据")
+        raise ValueError("行情未通过日期和价格校验: " + reason)
     if use_cache:
         _ensure_cache_dir()
         combined.to_csv(path)
@@ -309,6 +317,7 @@ def fetch_etf_daily(code: str, start: str = "20150101", end: str = "20500101",
 
     _ensure_cache_dir()
     errors = []
+    outcomes = []
 
     # ---- 主源：东方财富（前复权） ----
     if _src_cooling(code, "eastmoney"):
@@ -330,6 +339,7 @@ def fetch_etf_daily(code: str, start: str = "20150101", end: str = "20500101",
             errors.append("东财源返回空数据")
             _mark_src(code, "eastmoney", False)
         except Exception as e:
+            outcomes.append(e)
             errors.append(f"东财源 {type(e).__name__}: {e}")
             _mark_src(code, "eastmoney", False)
 
@@ -351,6 +361,7 @@ def fetch_etf_daily(code: str, start: str = "20150101", end: str = "20500101",
             errors.append("腾讯源返回空数据")
             _mark_src(code, "tencent", False)
         except Exception as e:
+            outcomes.append(e)
             errors.append(f"腾讯源 {type(e).__name__}: {e}")
             _mark_src(code, "tencent", False)
 
@@ -367,7 +378,11 @@ def fetch_etf_daily(code: str, start: str = "20150101", end: str = "20500101",
             note = f"{code} 截至 {last}"
             print(f"    [警告] 数据源均不可用，改用本地旧缓存：{code}“{src_name}”"
                   f"（数据截至 {last}）")
+            valid, reason = validate_bar(stale, last)
+            if not valid:
+                raise ValueError("历史缓存未通过校验: " + reason)
             stale.attrs["stale_note"] = note
+            stale.attrs["update_state"] = "not_ready" if outcomes and all(isinstance(e, DataNotReady) for e in outcomes) else "error"
             return stale
 
     raise ConnectionError(f"获取 {code} 失败：" + "；".join(errors))

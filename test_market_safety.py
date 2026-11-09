@@ -32,11 +32,14 @@ class MarketSafety(unittest.TestCase):
         import pandas as pd
         from datetime import date
         with patch.object(d, "_expected_latest_trade_date", return_value=date(2026,11,6)):
-            with self.assertRaises(ValueError):
+            with self.assertRaises(d.DataNotReady):
                 d._load_or_fetch("missing.csv", lambda *_: pd.DataFrame(), "20100101", "20500101", False, False)
-            with self.assertRaises(ValueError):
+            with self.assertRaises(d.DataNotReady):
                 d._load_or_fetch("missing.csv", lambda *_: pd.DataFrame({"close": [1.]}, index=pd.to_datetime(["2026-11-05"])), "20100101", "20500101", False, False)
 
+    def test_close_buffer(self):
+        self.assertEqual(str(d._expected_latest_trade_date(datetime(2026,11,9,15,59))), "2026-11-06")
+        self.assertEqual(str(d._expected_latest_trade_date(datetime(2026,11,9,16,0))), "2026-11-09")
     def test_calendar_expiry(self):
         with self.assertRaises(ValueError): d._expected_latest_trade_date(datetime(2027,1,4,16))
     def test_failed_sources_do_not_use_sina(self):

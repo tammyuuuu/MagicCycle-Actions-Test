@@ -1,0 +1,45 @@
+[
+  {
+    "test": "stooq_active",
+    "url": "https://stooq.com/q/d/l/",
+    "params": {
+      "s": "aapl.us",
+      "i": "d",
+      "d1": "20100101",
+      "d2": "20201231"
+    },
+    "utc": "2026-11-09T14:50:14.936955+00:00",
+    "error": "HTTPSConnectionPool(host='stooq.com', port=443): Max retries exceeded with url: /q/d/l/?s=aapl.us&i=d&d1=20100101&d2=20201231 (Caused by ProxyError('Unable to connect to proxy', NewConnectionError(\"HTTPSConnection(host='127.0.0.1', port=7897): Failed to establish a new connection: [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。\")))"
+  },
+  {
+    "test": "stooq_delisted_probe",
+    "url": "https://stooq.com/q/d/l/",
+    "params": {
+      "s": "lehmq.us",
+      "i": "d"
+    },
+    "utc": "2026-11-09T14:50:14.940564+00:00",
+    "error": "HTTPSConnectionPool(host='stooq.com', port=443): Max retries exceeded with url: /q/d/l/?s=lehmq.us&i=d (Caused by ProxyError('Unable to connect to proxy', NewConnectionError(\"HTTPSConnection(host='127.0.0.1', port=7897): Failed to establish a new connection: [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。\")))"
+  },
+  {
+    "test": "sec_submissions",
+    "url": "https://data.sec.gov/submissions/CIK0000320193.json",
+    "params": {},
+    "utc": "2026-11-09T14:50:14.959473+00:00",
+    "status": "skipped: set SEC_USER_AGENT to real contact"
+  },
+  {
+    "test": "sec_companyfacts",
+    "url": "https://data.sec.gov/api/xbrl/companyfacts/CIK0000320193.json",
+    "params": {},
+    "utc": "2026-11-09T14:50:14.959493+00:00",
+    "status": "skipped: set SEC_USER_AGENT to real contact"
+  },
+  {
+    "test": "sec_filing_delisted",
+    "url": "https://data.sec.gov/submissions/CIK0000807585.json",
+    "params": {},
+    "utc": "2026-11-09T14:50:14.959496+00:00",
+    "status": "skipped: set SEC_USER_AGENT to real contact"
+  }
+]

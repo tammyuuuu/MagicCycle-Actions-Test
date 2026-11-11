@@ -1,0 +1,1 @@
+security_id,company_id,ticker_at_start,start_date,horizon_years,end_date,endpoint_multiple,peak_multiple,peak_date,endpoint_10x,ever_10x,outcome_status,delisting_event,source,verification_status

@@ -1,0 +1,25 @@
+name: BaoStock public data probe
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install baostock==0.9.4
+      - run: python tenbagger_research/test_baostock.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: baostock-public-test
+          path: |
+            tenbagger_research/baostock_test.json
+            tenbagger_research/all_stock_20151231.csv
+            tenbagger_research/stock_basic.csv
+          retention-days: 7

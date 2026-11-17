@@ -30,6 +30,10 @@ jobs:
           restore-keys: valuation-v1-
       - run: python run_check.py
       - run: python build_page.py
+      - name: Update investor disclosures
+        run: |
+          cp data_cache/investors.json docs/investors.json 2>/dev/null || cp investor_tracker_seed.json docs/investors.json
+          python update_investors.py || echo "Update failed; retaining previous investor snapshot"
       - uses: actions/cache/save@v4
         with:
           path: data_cache

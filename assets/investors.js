@@ -20,7 +20,7 @@
       const increases = comparable.filter(r => r.pct > 0).sort((a, b) => b.pct - a.pct).slice(0, 3);
       const decreases = comparable.filter(r => r.pct < 0).sort((a, b) => a.pct - b.pct).slice(0, 3);
       const groups = make('div', undefined, 'investor-groups'); appendGroup(groups, '持股增加', increases, 'investor-up'); appendGroup(groups, '持股减少', decreases, 'investor-down'); card.append(groups);
-      const source = make('p', undefined, 'investor-source'); source.append('按持股数量变化比例排列 · 披露 '); const link = make('a', info.disclosures[info.disclosures.length - 1].date); link.href = info.disclosures[info.disclosures.length - 1].url; link.target = '_blank'; link.rel = 'noopener noreferrer'; source.append(link); if (key === 'zhu') source.append(' · 股数为约数'); card.append(source); container.append(card);
+      const source = make('p', undefined, 'investor-source'); source.append('按持股数量变化比例排列 · 披露 '); const link = make('a', info.disclosures[info.disclosures.length - 1].date); link.href = info.disclosures[info.disclosures.length - 1].url; link.target = '_blank'; link.rel = 'noopener noreferrer'; source.append(link); if (key === 'zhu') source.append(' · 股数为约数'); card.append(source); const research = document.getElementById('investor-research-' + key); if (research) card.append(research.content.cloneNode(true)); container.append(card);
     });
   }).catch(() => { container.replaceChildren(make('p', '暂时无法读取持仓数据，请稍后再试。', 'investor-loading')); });
 }());

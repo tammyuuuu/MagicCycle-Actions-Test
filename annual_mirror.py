@@ -12,7 +12,7 @@ with db.open('rb') as handle:
     assert hashlib.file_digest(handle, 'sha256').hexdigest() == digest
 con = duckdb.connect(str(db), read_only=True)
 for year in [2022, 2023, 2024, 2025, 2026]:
-    if con.execute('select max(filed) from submissions').fetchone()[0].isoformat() < f'{year}-04-01':
+    if con.execute('select max(filed) from submissions').fetchone()[0].isoformat() < f'{year}-03-31':
         continue
     sql = f"""select adsh, cast(cast(cik as bigint) as varchar) cik, name, sic, form, fp,
               strftime(period,'%Y%m%d') period, strftime(filed,'%Y%m%d') filed
@@ -32,3 +32,4 @@ for year in [2022, 2023, 2024, 2025, 2026]:
     data = extract(Path('slice.zip'),year)
     data.update(source='https://huggingface.co/datasets/erlenbusch/sec-edgar', database_sha256=digest)
     save(Path(f'annual-inputs/{year}.json'),data)
+

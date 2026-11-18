@@ -1,7 +1,7 @@
 name: Acquire annual research inputs
 on:
   push:
-    paths: ['.github/workflows/annual-inputs.yml']
+    paths: ['.github/workflows/annual-inputs.yml', 'annual_mirror.py']
   workflow_dispatch:
 permissions:
   contents: read
@@ -24,3 +24,4 @@ jobs:
           name: annual-inputs
           path: annual-inputs/
           if-no-files-found: error
+

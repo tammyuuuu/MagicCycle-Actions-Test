@@ -1,0 +1,30 @@
+name: Acquire annual research inputs
+on:
+  push:
+    paths: ['.github/workflows/annual-inputs.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install requests
+      - name: Extract original Q1 filings
+        run: |
+          mkdir -p annual-inputs
+          for year in 2026 2022 2023 2024; do
+            if curl -fLsS --max-time 180 -A 'Cycle research (github.com/tammyuuuu/MagicCycle-Actions-Test)' "https://www.sec.gov/files/dera/data/financial-statement-data-sets/${year}q1.zip" -o quarter.zip; then
+              python annual_sec.py quarter.zip "$year" "annual-inputs/$year.json"
+            fi
+            sleep 4
+          done
+      - uses: actions/upload-artifact@v4
+        with:
+          name: annual-inputs
+          path: annual-inputs/
+          if-no-files-found: error

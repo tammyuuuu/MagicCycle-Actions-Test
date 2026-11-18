@@ -1,0 +1,313 @@
+[
+  {
+    "id": "investment-review",
+    "title": "七家公司投资机会与估值复核",
+    "question": "当前价格能否为未来五年收益留下足够空间？",
+    "summary": "NVDA 可优先深研，但倍数估值与 DCF 存在分歧；其余六家公司在中性情景下均需等待价格或经营改善。",
+    "progress": "已完成前三轮统一复核，情景未赋概率，价格基准为 2026-11-06。",
+    "next_action": "优先核对 NVDA 客户资本回报，并解释 DCF 与倍数模型的差异。",
+    "status": "条件观察",
+    "reports": [
+      "stock_research/前三轮投资机会总复核_20261109.md",
+      "stock_research/五家公司估值验证_DCF与反向估值_20261107.md",
+      "stock_research/六家公司投资决策_20261109.md"
+    ],
+    "folders": [
+      "stock_research/five_tech_valuation_20261107",
+      "stock_research/valuation_validation_20261107",
+      "stock_research/seven_company_economics_20261107"
+    ],
+    "focus": true
+  },
+  {
+    "id": "zhu-long",
+    "title": "朱少醒连续增持的跨周期验证",
+    "question": "连续增持信号在 2015—2025 年是否有稳定增量收益？",
+    "summary": "目前无法确认完整区间或跨周期优势；2015 年对照缺价，早期季报和公司行为核验仍不完整。",
+    "progress": "扩展计算与最终审计已完成，现有收益仍属同一快照上的探索性结果。",
+    "next_action": "补齐原始季报、退市股行情及独立复权证据后再验证。",
+    "status": "受阻",
+    "reports": [
+      "investor_holdings_research/zhu_2015_2025/audit_final/最终审计报告.md",
+      "investor_holdings_research/zhu_2015_2025/扩展研究报告.md"
+    ],
+    "folders": [
+      "investor_holdings_research/zhu_2015_2025"
+    ],
+    "focus": true
+  },
+  {
+    "id": "factor-study",
+    "title": "盈利能力与估值能否预测长期收益",
+    "question": "哪些财务指标值得进入下一轮预测检验？",
+    "summary": "优先研究盈利能力与估值的联合解释；项目目前尚无独立验证有效的预测指标。",
+    "progress": "已整理外部论文与有限自有测试，A 股历史总回报和时点数据尚未满足要求。",
+    "next_action": "先补齐历史身份、公司行为与披露时点，再冻结检验方案。",
+    "status": "受阻",
+    "reports": [
+      "tenbagger_research/预测指标证据与有限测试.md"
+    ],
+    "folders": [
+      "tenbagger_research/cohort_2020_30",
+      "tenbagger_research/csmar_2015_verification",
+      "tenbagger_research/csmar_2020_pilot"
+    ],
+    "focus": true
+  },
+  {
+    "id": "business-scenarios",
+    "title": "贵州茅台与微软的业务驱动盈利情景",
+    "question": "收入结构、利润率和股数变化如何影响三至五年回报？",
+    "summary": "业务分拆有助于检验增长假设，但情景尚未建立资本预算、现金余额及融资约束。",
+    "progress": "已完成业务驱动 EPS 与估值敏感性计算，参数为研究条件假设。",
+    "next_action": "补充资本开支与回购资金约束，复核增长及终点估值的可实现性。",
+    "status": "阶段完成",
+    "reports": [
+      "tenbagger_research/2026业务驱动EPS与估值情景.md"
+    ],
+    "folders": [
+      "tenbagger_research/scenario_2026"
+    ],
+    "focus": false
+  },
+  {
+    "id": "be",
+    "title": "Bloom Energy 回撤建仓研究",
+    "question": "等待更深回撤，能否稳定改善长期建仓结果？",
+    "summary": "结束本轮择时研究，以长期持有作比较基准；未采用特定回撤信号。",
+    "progress": "滚动五年结果高度重叠，部分买点集中，2018 年上市初期极端下跌未被覆盖。",
+    "next_action": "本轮归档；出现独立长周期样本或完整行情核验后再复评。",
+    "status": "已结束",
+    "reports": [
+      "stock_research/BE长期建仓研究_20261109.md"
+    ],
+    "folders": [
+      "stock_research/be_study_20261109"
+    ],
+    "focus": false
+  },
+  {
+    "id": "crdo",
+    "title": "Credo 动量策略核验",
+    "question": "252 日动量的高收益是否跨时期稳定？",
+    "summary": "结束本轮择时筛选；收益集中于一段持仓，滚动平均收益不及持有且参数敏感。",
+    "progress": "已核对关键持仓及暴涨日，上市不足五年，全历史第二数据源核验未完成。",
+    "next_action": "本轮归档，保留长期持有基准。",
+    "status": "已结束",
+    "reports": [
+      "stock_research/CRDO动量交易核验_20261109.md"
+    ],
+    "folders": [
+      "stock_research/crdo_study_20261109"
+    ],
+    "focus": false
+  },
+  {
+    "id": "ntra",
+    "title": "Natera 回撤建仓的事件依赖",
+    "question": "30% 回撤建仓优势是否由少数事件贡献？",
+    "summary": "剔除 2020 年 3 月对应窗口后，平均年化优势约为 −0.08 个百分点，优势对该阶段敏感。",
+    "progress": "1349 个滚动窗口归并为 26 个机械事件，独立五年阶段仍太少。",
+    "next_action": "等待更多独立样本，并补齐完整行情及公司行为核验。",
+    "status": "阶段完成",
+    "reports": [
+      "stock_research/NTRA回撤事件与样本外核验_20261109.md"
+    ],
+    "folders": [
+      "stock_research/ntra_experiment_20261109"
+    ],
+    "focus": false
+  },
+  {
+    "id": "timing",
+    "title": "微软与英伟达择时的时间稳定性",
+    "question": "近期择时胜出能否代表长期有效？",
+    "summary": "微软近期估值择时优势依赖一次成功空仓；英伟达趋势的风险控制证据强于稳定增收证据。",
+    "progress": "已增加 3930 条月末滚动结果，但窗口高度重叠。",
+    "next_action": "若重启研究，先冻结规则并在独立时期检验。",
+    "status": "阶段完成",
+    "reports": [
+      "stock_research/Microsoft_NVIDIA买卖点时间稳定性_20261107.md"
+    ],
+    "folders": [
+      "stock_research/timing_backtest_20261107",
+      "stock_research/timing_stability_20261107"
+    ],
+    "focus": false
+  },
+  {
+    "id": "fundamentals",
+    "title": "基本面恶化后是否暂停新增",
+    "question": "财务恶化触发暂停投入，能否改善长期结果？",
+    "summary": "四家公司均不启用自动暂停新增条件；覆盖不足、零触发或事件过少使证据不足。",
+    "progress": "已完成时间顺序重放，BWXT 测试事件窗口重叠，训练段方向相反。",
+    "next_action": "保持原研究基准，竞争优势和公司特有风险继续人工复核。",
+    "status": "阶段完成",
+    "reports": [
+      "stock_research/fundamental_review_20261109/暂停新增复核报告.md"
+    ],
+    "folders": [
+      "stock_research/fundamental_review_20261109"
+    ],
+    "focus": false
+  },
+  {
+    "id": "entry",
+    "title": "四家公司首次建仓方法比较",
+    "question": "立即投入、等待回撤和分批投入如何取舍？",
+    "summary": "NVDA、MSFT、GOOGL 初步以立即持有为基准；BWXT 等待回撤的优势仍缺独立验证。",
+    "progress": "已完成滚动建仓比较，重叠窗口不能视为独立样本外。",
+    "next_action": "复核 BWXT 事件依赖及行情公司行为，再考虑新增信号。",
+    "status": "阶段完成",
+    "reports": [
+      "stock_research/四家公司首次建仓初步比较_20261109.md"
+    ],
+    "folders": [
+      "stock_research/four_strategy_20261109",
+      "stock_research/bwxt_25_20261109"
+    ],
+    "focus": false
+  },
+  {
+    "id": "mature",
+    "title": "成熟科技基本面选股的历史检验",
+    "question": "统一基本面筛选能否稳定提高后续收益？",
+    "summary": "本版规则未显示稳定提高年化收益的证据，历史代码和完整行情筛选带来偏差。",
+    "progress": "使用 SEC 2020、2021 年报批次；遗漏其他季度提交年报的企业。",
+    "next_action": "如重启，补齐全财年申报、历史证券身份及独立复权。",
+    "status": "阶段完成",
+    "reports": [
+      "stock_research/成熟科技基本面选股检验_v1.md"
+    ],
+    "folders": [
+      "stock_research/mature_tech_v1"
+    ],
+    "focus": false
+  },
+  {
+    "id": "a-share",
+    "title": "A 股科技公司的品牌与现金创造",
+    "question": "技术和份额优势是否转化为可持续品牌与现金回报？",
+    "summary": "比亚迪品牌证据相对完整；海康、迈瑞等仍需补充客户偏好、现金转化及统一估值核验。",
+    "progress": "七家公司定向初筛已完成，企业研究优先级仍有条件。",
+    "next_action": "补核现金流背离、客户复购证据及同日估值。",
+    "status": "阶段完成",
+    "reports": [
+      "stock_research/A股科技品牌与投资研究_20261107.md"
+    ],
+    "folders": [
+      "stock_research/a_share_tech_20261107"
+    ],
+    "focus": false
+  },
+  {
+    "id": "hk",
+    "title": "港股科技公司的投资价值复核",
+    "question": "算力与新业务投入能否转化为每股现金回报？",
+    "summary": "腾讯优先研究；阿里重点观察云投资回报，小米需核验汽车单位经济性与现金转化。",
+    "progress": "五家公司复核完成，行情及财务截面为 2026-11-06 至 11-07。",
+    "next_action": "更新财报时重点复核算力利用率、现金资本开支和净股数变化。",
+    "status": "阶段完成",
+    "reports": [
+      "stock_research/港股科技投资价值复核_20261107.md"
+    ],
+    "folders": [
+      "stock_research/hk_tech_20261107"
+    ],
+    "focus": false
+  },
+  {
+    "id": "frontier",
+    "title": "前沿科技的商业兑现与研究优先级",
+    "question": "哪些技术突破已有可追踪的商业兑现证据？",
+    "summary": "优先理解 Rocket Lab 与 CRISPR Therapeutics，IonQ 保留技术观察；企业研究优先级仍需结合价格。",
+    "progress": "已核对任务、监管与财务证据，扩展范围登记区分已核实与未核实公司。",
+    "next_action": "跟踪订单转收入、产品验证和融资稀释。",
+    "status": "阶段完成",
+    "reports": [
+      "stock_research/前沿科技公司候选与收益研究_20261107.md"
+    ],
+    "folders": [
+      "stock_research/frontier_companies_20261107",
+      "stock_research/frontier_scope_20261107"
+    ],
+    "focus": false
+  },
+  {
+    "id": "brand",
+    "title": "科技公司品牌优势的证据复核",
+    "question": "知名度、技术和份额能否证明品牌溢价？",
+    "summary": "仅 13 家完成定向品牌与对象复核，其余保留原研究范围，品牌尽调尚未完成。",
+    "progress": "已逐项登记证据不足与判断改变条件。",
+    "next_action": "补充客户独立偏好和复购证据，并核对经营变现。",
+    "status": "阶段完成",
+    "reports": [
+      "stock_research/brand_gate_20261107/现有名单品牌复核.md"
+    ],
+    "folders": [
+      "stock_research/brand_gate_20261107",
+      "stock_research/frontier_scope_20261107"
+    ],
+    "focus": false
+  },
+  {
+    "id": "returns",
+    "title": "七家成长公司的历史收益比较",
+    "question": "近期高收益候选能否经受滚动窗口比较？",
+    "summary": "BE、CRDO、PL、NTRA 进入后续研究；ALAB 历史不足三年，SYM 共同区间收益为负。",
+    "progress": "已统一共同区间并截除 SPAC 或分拆前历史，逐笔复权仍需交叉核验。",
+    "next_action": "将历史排序与估值、企业前景分别复核。",
+    "status": "阶段完成",
+    "reports": [
+      "stock_research/七公司买入持有收益筛选_20261109.md"
+    ],
+    "folders": [
+      "stock_research/seven_returns_20261109",
+      "stock_research/pl_study_20261109",
+      "stock_research/tech_comparison_20261107",
+      "stock_research/reference_price_20261109"
+    ],
+    "focus": false
+  },
+  {
+    "id": "holding-signals",
+    "title": "公开持仓信号与同季股票的增量比较",
+    "question": "跟随公开新增或连续增持，能否带来额外收益？",
+    "summary": "朱少醒配对样本中信号年化较高，但 2025Q4 单期贡献明显；8 期样本不足以判断跨周期稳定。",
+    "progress": "已完成原回测、统一区间审计和配对增量验证。",
+    "next_action": "扩展原始季报和独立公司行为核验，避免把描述性超额当作 Alpha。",
+    "status": "阶段完成",
+    "reports": [
+      "investor_holdings_research/zhu_matched_validation/验证报告.md",
+      "investor_holdings_research/audit/审计报告.md"
+    ],
+    "folders": [
+      "investor_holdings_research/audit",
+      "investor_holdings_research/backtest",
+      "investor_holdings_research/zhu_matched_validation"
+    ],
+    "focus": false
+  },
+  {
+    "id": "data-feasibility",
+    "title": "十倍股研究的数据覆盖与可行性",
+    "question": "现有数据能否支撑包含退市企业的全市场研究？",
+    "summary": "已测试免费数据不足以识别完整历史市场十倍股；公开快照仍缺可靠历史身份、市值及总回报链。",
+    "progress": "完成免费源测试、公开快照时点审计与两行业案例终审，严格联合样本仍不足。",
+    "next_action": "取得可核验的历史证券主表、退市回报、公司行为及披露时点后再启动总体检验。",
+    "status": "受阻",
+    "reports": [
+      "tenbagger_research/免费数据可行性结论.md",
+      "tenbagger_research/公开快照2015审计.md",
+      "tenbagger_research/2020两行业探索终审.md"
+    ],
+    "folders": [
+      "tenbagger_research/baostock_cloud",
+      "tenbagger_research/cohort_raw",
+      "tenbagger_research/pipeline",
+      "tenbagger_research/public_snapshot",
+      "tenbagger_research/public_snapshot_metadata"
+    ],
+    "focus": false
+  }
+]

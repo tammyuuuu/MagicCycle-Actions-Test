@@ -1,28 +1,139 @@
-import hashlib, html, json, shutil
+"""Render the research homepage from report-backed studies and Azure monitor state."""
+import hashlib
+import html
+import json
+import re
+import shutil
 from datetime import datetime, timezone
 from pathlib import Path
+from urllib.parse import urljoin
+from zoneinfo import ZoneInfo
+
 from research_inventory import collect
-root=Path('research_monitor'); docs=Path('docs'); docs.mkdir(exist_ok=True)
-for obsolete in ('investors.html', 'investors.json', 'assets/investors.js', 'assets/investors.css'):
-    (docs / obsolete).unlink(missing_ok=True)
-catalog={p['path']:p for p in json.loads((root/'catalog.json').read_text(encoding='utf8'))}
-catalog.update({p['path']:p for p in collect()})
-monitor=json.loads((root/'runtime/status.json').read_text(encoding='utf8'))
-validation=json.loads((root/'validation.json').read_text(encoding='utf8'))
-e=html.escape; repo='https://github.com/tammyuuuu/MagicCycle-Actions-Test'
-data={'built_at':datetime.now(timezone.utc).isoformat(),'monitor':monitor,'projects':list(catalog.values()),'validation':validation}
-payload=json.dumps(data,ensure_ascii=False,indent=2); version=hashlib.sha256(payload.encode()).hexdigest()
-(docs/'research.json').write_text(payload,encoding='utf8'); shutil.copytree(root,docs/'research',dirs_exist_ok=True)
-cards=[]
-for p in catalog.values():
-    links=''.join(f'<li>{e(Path(a).name)}</li>' for a in p['artifacts'])
-    sources=''.join(f'<li><a href="{e(s)}">{e(s[:100])}</a></li>' for s in p['sources'])
-    cards.append(f'<article data-status="{p["status"]}"><span class="status">{p["status"]}</span><h3>{e(p["title"])}</h3><p>{e(p["reason"])}</p><small>{p["files"]} 项产物 · {p["updated_at"][:10]}</small><details><summary>产物与数据源</summary><ul>{links}{sources}</ul></details></article>')
-errors=monitor.get('observation',{}).get('errors_pp',{})
-table=''.join(f'<tr><td>{label}</td><td>{value}%</td><td>{errors.get(key,"待披露")}</td></tr>' for key,label,value in [('research','研究预测',49),('last_quarter','上一季外推',48),('guidance_midpoint','微软指引中点',49.5)])
-page='''<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Cycle 研究实验室</title><style>
-*{box-sizing:border-box}body{margin:0;background:#f4f3ed;color:#202e2b;font:16px/1.65 'Segoe UI',sans-serif}main{max-width:1180px;margin:auto;padding:40px 24px}header{border-bottom:1px solid #bdc6bf;padding-bottom:30px;margin-bottom:30px}a{color:#276450}nav{display:flex;justify-content:space-between;gap:16px}h1{font-family:Georgia,serif;font-size:clamp(34px,5vw,56px);margin:32px 0 8px;font-weight:500}h2{font-size:25px;font-weight:500}h3{overflow-wrap:anywhere;font-size:18px}p{color:#56665e}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(285px,1fr));gap:18px}article,.panel{background:#fffefa;border:1px solid #d8ddd5;border-radius:12px;padding:24px}.focus{display:grid;grid-template-columns:1.3fr 1fr;gap:24px}.status{display:inline-block;background:#e4ede4;color:#315d46;border-radius:30px;padding:3px 12px;font-size:13px}table{width:100%;border-collapse:collapse}td,th{text-align:left;padding:12px 5px;border-bottom:1px solid #e1e5de}small{color:#718076}button{padding:8px 18px;border:1px solid #b7c6bd;border-radius:25px;background:transparent;cursor:pointer;margin:0 8px 16px 0}button[aria-pressed=true]{background:#254d3e;color:white}details{margin-top:16px}li{overflow-wrap:anywhere}blockquote{margin:12px 0;padding-left:18px;border-left:3px solid #86a28b}footer{margin-top:40px;color:#64766a}@media(max-width:700px){.focus{grid-template-columns:1fr}main{padding:24px 16px}}
-</style></head><body><main data-version="VERSION"><header><nav><strong>CYCLE / 研究实验室</strong><a href="REPO/actions">自动运行日志 ↗</a></nav><h1>让研究接受下一季检验</h1><p>研究进展、公开证据与预测验证</p><small>页面生成于 BUILT · 时间均为 UTC</small></header><section class="focus"><div class="panel"><span class="status">MONITOR</span><h2>微软 Azure · FY27 Q2</h2><p>效率提升能否抵消算力交付推迟，让收入增速继续加快？</p><table><tr><th>预测依据</th><th>固定汇率同比</th><th>误差 / 百分点</th></tr>TABLE</table><p>按首次抓取的正式披露计算绝对误差，最小值并列时记平局。</p><small>CHECK</small><p><a href="research/registration.md">原始登记</a> · <a href="research/addendum.json">追加对照</a> · <a href="research/runtime/status.json">监测结果</a></p></div><div class="panel"><h2>验证与原因复核</h2><p>FY27 Q1 官方公告已提取 Azure 固定汇率同比 <strong>48%</strong>，与原登记一致。</p><a href="research/validation.json">验证记录</a> · <a href="research/q1_release.html">公告快照</a><blockquote>“our ability to also create additional capacity within our existing fleet gave us some room to be able to convert that actually”</blockquote><p>Amy Hood 回答 Karl Keirstead，谈现有设备容量与效率提升。</p><a href="https://www.microsoft.com/en-us/investor/events/fy-2027/earnings-fy-2027-q1">微软业绩会原文 ↗</a><p><a href="research/method.md">状态判定与监测规则</a></p></div></section><h2>研究项目 COUNT 项</h2><div id="filters">FILTERS</div><section class="grid">CARDS</section><footer><a href="research.json">下载首页数据</a> · <a href="REPO">查看仓库</a></footer></main><script>document.querySelectorAll('[data-filter]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-filter]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));document.querySelectorAll('[data-status]').forEach(x=>x.hidden=b.dataset.filter!=='全部'&&x.dataset.status!==b.dataset.filter)});</script></body></html>'''
-for key,value in {'VERSION':version,'REPO':repo,'BUILT':data['built_at'],'MONITOR':('已完成' if monitor['status']=='completed' else '待验证')+' · '+('监测异常' if monitor['status']=='error' else '自动监测'),'TABLE':table,'CHECK':e(monitor['checked_at']+' '+monitor.get('detail','已锁定首次观测')+' · 实际值 '+str(monitor.get('observation',{}).get('actual','待披露'))+' · 最小误差预测 '+str(monitor.get('observation',{}).get('winners','待评分'))),'COUNT':str(len(catalog)),'CARDS':''.join(cards),'FILTERS':''.join(f'<button aria-pressed="{str(s=="全部").lower()}" data-filter="{s}">{s}</button>' for s in ['全部','运行中','待验证','已完成'])}.items():
-    page=page.replace(key,value)
-(docs/'index.html').write_text(page,encoding='utf8')
+
+ROOT = Path('research_monitor')
+DOCS = Path('docs')
+REPO = 'https://github.com/tammyuuuu/MagicCycle-Actions-Test'
+LABELS = {'research': '研究预测', 'last_quarter': '上一季外推', 'guidance_midpoint': '微软指引中点'}
+escape = html.escape
+
+
+def inline(text, original):
+    """Render the small Markdown subset used by the existing research reports."""
+    text = escape(text)
+    base = REPO + '/blob/main/' + original
+    def link(match):
+        label, target = match.groups()
+        address = html.unescape(target)
+        if not address.startswith(('https://', 'http://')):
+            local = (Path(original).parent / address).resolve()
+            allowed_roots = [Path(name).resolve() for name in ('stock_research', 'investor_holdings_research')]
+            allowed = any(local.is_relative_to(folder) for folder in allowed_roots)
+            relative = (Path(original).parent / address).as_posix()
+            name = hashlib.sha256(relative.encode()).hexdigest()[:16] + Path(address).suffix
+            saved = ROOT / 'evidence' / name
+            if allowed and local.is_file() and local.suffix in ('.csv', '.md') and local.stat().st_size < 1000000:
+                saved.parent.mkdir(exist_ok=True)
+                shutil.copy2(local, saved)
+            if saved.exists():
+                evidence = DOCS / 'research' / 'evidence'
+                evidence.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(saved, evidence / name)
+                address = 'research/evidence/' + name
+            else:
+                return label + '（原报告附件）'
+        return f'<a href="{escape(address, quote=True)}">{label}</a>'
+    text = re.sub(r'\[([^\]]+)\]\(([^)]+)\)', link, text)
+    text = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', text)
+    return re.sub(r'`([^`]+)`', r'<code>\1</code>', text)
+
+
+def report_html(report):
+    blocks = []
+    table = []
+    def flush_table():
+        if table:
+            rows = []
+            for index, line in enumerate(table):
+                if re.fullmatch(r'[\s|:\-]+', line):
+                    continue
+                tag = 'th' if index == 0 else 'td'
+                cells = ''.join(f'<{tag}>{inline(cell.strip(), report["original"])}</{tag}>' for cell in line.strip('|').split('|'))
+                rows.append('<tr>' + cells + '</tr>')
+            blocks.append('<div class="table-scroll"><table>' + ''.join(rows) + '</table></div>')
+            table.clear()
+    for line in report['content'].splitlines():
+        if line.startswith('|'):
+            table.append(line)
+            continue
+        flush_table()
+        if not line.strip():
+            continue
+        heading = re.match(r'^#{1,6}\s+(.+)', line)
+        if heading:
+            blocks.append('<h4>' + inline(heading.group(1), report['original']) + '</h4>')
+        else:
+            blocks.append('<p>' + inline(line, report['original']) + '</p>')
+    flush_table()
+    return ''.join(blocks)
+
+
+def project_card(project):
+    sources = ''.join(f'<li><a href="{escape(source)}">{escape(source)}</a></li>' for source in project['sources'])
+    reports = []
+    for report in project['reports']:
+        saved = Path(report['snapshot']).relative_to(ROOT).as_posix()
+        reports.append(f'<details class="report"><summary>{escape(report["title"])}</summary><a href="research/{saved}">下载原始报告</a><div class="report-body">{report_html(report)}</div></details>')
+    search = escape(' '.join([project['title'], project['question'], project['summary']]), quote=True)
+    return f'''<details class="study" data-status="{project['status']}" data-search="{search}">
++<summary><div class="card-meta"><span class="status">{project['status']}</span><span>{escape(project['report_date'])}</span></div><h3>{escape(project['title'])}</h3><p class="question">{escape(project['question'])}</p><p class="conclusion">{escape(project['summary'])}</p><span class="expand-label">查看结论与证据 <span aria-hidden="true">＋</span></span></summary>
++<div class="study-body"><dl><dt>当前进展</dt><dd>{escape(project['progress'])}</dd><dt>下一步行动</dt><dd>{escape(project['next_action'])}</dd></dl><h4>原始报告与数据</h4>{''.join(reports)}<details class="source-list"><summary>数据来源 · {len(project['sources'])} 项</summary><ul>{sources or '<li>来源说明见原始报告。</li>'}</ul></details></div></details>'''.replace('\n+', '\n')
+
+
+def azure_card(monitor, validation):
+    observation = monitor.get('observation', {})
+    errors = observation.get('errors_pp', {})
+    rows = ''.join(f'<tr><th scope="row">{LABELS[key]}</th><td>{value}%</td><td>{errors.get(key, "等待披露")}</td></tr>' for key, value in [('research', 49), ('last_quarter', 48), ('guidance_midpoint', 49.5)])
+    status = {'waiting': '等待披露', 'completed': '已评分', 'error': '监测异常'}[monitor['status']]
+    checked = datetime.fromisoformat(monitor['checked_at']).astimezone(ZoneInfo('Asia/Shanghai')).strftime('%Y-%m-%d %H:%M 北京时间')
+    health = 'IR 首页尚未链接 Q2 正式公告。' if monitor['status'] == 'waiting' else monitor.get('detail', '首次正式披露值已锁定。')
+    winners = '、'.join(LABELS[key] for key in observation.get('winners', []))
+    result = f'实际增速 {observation["actual"]}%，误差最小为{winners}。' if observation else 'Q2 预测为 49%；上一季为 48%，公司指引中点为 49.5%。'
+    action = '复核实际披露与原文，比较三种预测的误差及原因。' if observation else '等待截至 2026-12-31 财季首次正式披露，自动锁定实际值并评分。'
+    return f'''<details class="study azure"><summary><div class="card-meta"><span class="status">{status}</span><span>自动监测</span></div><h3>微软 Azure 的效率提升能否支撑增长加速？</h3><p class="conclusion">{escape(result)}</p><p class="question">{escape(health)}</p><span class="expand-label">查看预测与监测 <span aria-hidden="true">＋</span></span></summary><div class="study-body"><dl><dt>当前进展</dt><dd>FY27 Q1 真实公告已验证，固定汇率同比为 {validation['actual']}%。最近检查 {escape(checked)}。</dd><dt>下一步行动</dt><dd>{action}</dd></dl><div class="table-scroll"><table><caption>FY27 Q2 · Azure 固定汇率同比增速</caption><thead><tr><th>预测依据</th><th>预测值</th><th>绝对误差 / 百分点</th></tr></thead><tbody>{rows}</tbody></table></div><p>以首次成功抓取的正式披露计算绝对误差，最小值并列记平局。首次观测锁定后保留，后续修订不覆盖。</p><h4>效率提升的原文</h4><blockquote lang="en">our ability to also create additional capacity within our existing fleet gave us some room to be able to convert that actually</blockquote><p>Amy Hood 回答 Karl Keirstead，说明现有设备释放容量。供给延迟、新效率收益及 token 定价仍影响下季结果。</p><p><a href="https://www.microsoft.com/en-us/investor/events/fy-2027/earnings-fy-2027-q1">阅读微软业绩会原文 ↗</a></p><div class="evidence-links"><a href="research/registration.md">原始登记</a><a href="research/addendum.json">追加对照与时间戳</a><a href="research/validation.json">上季抓取验证</a><a href="research/q1_release.html">公告快照</a><a href="research/runtime/status.json">当前监测结果</a></div></div></details>'''
+
+
+def main():
+    DOCS.mkdir(exist_ok=True)
+    projects = collect()
+    monitor = json.loads((ROOT / 'runtime/status.json').read_text(encoding='utf8'))
+    validation = json.loads((ROOT / 'validation.json').read_text(encoding='utf8'))
+    data = {'built_at': datetime.now(timezone.utc).isoformat(), 'monitor': monitor, 'projects': projects, 'validation': validation}
+    payload = json.dumps(data, ensure_ascii=False, indent=2)
+    version = hashlib.sha256(payload.encode()).hexdigest()
+    (DOCS / 'research.json').write_text(payload, encoding='utf8')
+    shutil.copytree(ROOT, DOCS / 'research', dirs_exist_ok=True)
+    focused = [project for project in projects if project['focus']]
+    archived = [project for project in projects if not project['focus']]
+    substitutions = {
+        '{{VERSION}}': version,
+        '{{FOCUS_COUNT}}': str(len(focused) + 1),
+        '{{ARCHIVE_COUNT}}': str(len(archived)),
+        '{{TOTAL_COUNT}}': str(len(projects) + 1),
+        '{{AZURE}}': azure_card(monitor, validation),
+        '{{FOCUSED}}': ''.join(project_card(project) for project in focused),
+        '{{ARCHIVED}}': ''.join(project_card(project) for project in archived),
+        '{{BUILT}}': data['built_at'],
+    }
+    page = Path('templates/research_home.html').read_text(encoding='utf8')
+    for key, value in substitutions.items():
+        page = page.replace(key, value)
+    (DOCS / 'index.html').write_text(page, encoding='utf8')
+    (DOCS / 'assets').mkdir(exist_ok=True)
+    shutil.copy2('assets/research.css', DOCS / 'assets/research.css')
+    shutil.copy2('assets/research.js', DOCS / 'assets/research.js')
+    shutil.copy2('assets/xingxun-serif-650.woff', DOCS / 'assets/xingxun-serif-650.woff')
+
+
+if __name__ == '__main__':
+    main()

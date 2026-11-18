@@ -1,0 +1,403 @@
+{
+  "prediction": {
+    "cutoff": "2024-11-06",
+    "inputs": {
+      "GOOGL": {
+        "filed": "2024-01-31",
+        "accession": "0001652044-24-000022",
+        "end": "2023-12-31",
+        "prior_end": "2022-12-31",
+        "revenue": 307394000000,
+        "prior_revenue": 282836000000,
+        "operating_income": 84293000000,
+        "operating_cash_flow": 101746000000,
+        "growth": 0.0868277022726951,
+        "margin": 0.27421810445226646,
+        "cash": 0.3309954000403391,
+        "trend_start": "2024-08-08",
+        "trend_end": "2024-11-06",
+        "trend": 0.09081172262977377
+      },
+      "MSFT": {
+        "filed": "2024-07-30",
+        "accession": "0000950170-24-087843",
+        "end": "2024-06-30",
+        "prior_end": "2023-06-30",
+        "revenue": 245122000000,
+        "prior_revenue": 211915000000,
+        "operating_income": 109433000000,
+        "operating_cash_flow": 118548000000,
+        "growth": 0.1566996201307127,
+        "margin": 0.44644299573273716,
+        "cash": 0.48362856047192826,
+        "trend_start": "2024-08-08",
+        "trend_end": "2024-11-06",
+        "trend": 0.04531359775796129
+      },
+      "NVDA": {
+        "filed": "2024-02-21",
+        "accession": "0001045810-24-000029",
+        "end": "2024-01-28",
+        "prior_end": "2023-01-29",
+        "revenue": 60922000000,
+        "prior_revenue": 26974000000,
+        "operating_income": 32972000000,
+        "operating_cash_flow": 28090000000,
+        "growth": 1.2585452658115224,
+        "margin": 0.5412166376678376,
+        "cash": 0.4610813827517153,
+        "trend_start": "2024-08-08",
+        "trend_end": "2024-11-06",
+        "trend": 0.3872771476886563
+      },
+      "BWXT": {
+        "filed": "2024-02-27",
+        "accession": "0001486957-24-000011",
+        "end": "2023-12-31",
+        "prior_end": "2022-12-31",
+        "revenue": 2496309000,
+        "prior_revenue": 2232834000,
+        "operating_income": 383059000,
+        "operating_cash_flow": 363701000,
+        "growth": 0.11800026334246083,
+        "margin": 0.15345015380708077,
+        "cash": 0.14569550484335073,
+        "trend_start": "2024-08-08",
+        "trend_end": "2024-11-06",
+        "trend": 0.21574149040634394
+      }
+    },
+    "portfolios": {
+      "growth": {
+        "scores": {
+          "GOOGL": 1.0,
+          "MSFT": 3.0,
+          "NVDA": 4.0,
+          "BWXT": 2.0
+        },
+        "picks": [
+          "NVDA",
+          "MSFT"
+        ]
+      },
+      "finance": {
+        "scores": {
+          "GOOGL": 1.6666666666666667,
+          "MSFT": 3.3333333333333335,
+          "NVDA": 3.6666666666666665,
+          "BWXT": 1.3333333333333333
+        },
+        "picks": [
+          "NVDA",
+          "MSFT"
+        ]
+      },
+      "trend": {
+        "scores": {
+          "GOOGL": 2.0,
+          "MSFT": 1.0,
+          "NVDA": 4.0,
+          "BWXT": 3.0
+        },
+        "picks": [
+          "NVDA",
+          "BWXT"
+        ]
+      },
+      "combined": {
+        "scores": {
+          "GOOGL": 1.8333333333333333,
+          "MSFT": 2.1666666666666665,
+          "NVDA": 3.8333333333333335,
+          "BWXT": 2.1666666666666665
+        },
+        "picks": [
+          "NVDA",
+          "BWXT"
+        ]
+      }
+    }
+  },
+  "records": [
+    {
+      "scheduled": "2024-12-06",
+      "entry": "2024-11-07",
+      "observed_close": "2024-12-06",
+      "benchmark": {
+        "net_pct": 0.07659343799757412,
+        "max_drawdown_pct": -3.845250823227697,
+        "buys": 4,
+        "liquidation_sells": 4
+      },
+      "results": {
+        "growth": {
+          "net_pct": -0.12316659748191627,
+          "max_drawdown_pct": -5.095688632474349,
+          "buys": 2,
+          "liquidation_sells": 2,
+          "picks": [
+            "NVDA",
+            "MSFT"
+          ],
+          "excess_pp": -0.1997600354794904
+        },
+        "finance": {
+          "net_pct": -0.12316659748191627,
+          "max_drawdown_pct": -5.095688632474349,
+          "buys": 2,
+          "liquidation_sells": 2,
+          "picks": [
+            "NVDA",
+            "MSFT"
+          ],
+          "excess_pp": -0.1997600354794904
+        },
+        "trend": {
+          "net_pct": -0.21137467453109515,
+          "max_drawdown_pct": -4.765871531016252,
+          "buys": 2,
+          "liquidation_sells": 2,
+          "picks": [
+            "NVDA",
+            "BWXT"
+          ],
+          "excess_pp": -0.2879681125286693
+        },
+        "combined": {
+          "net_pct": -0.21137467453109515,
+          "max_drawdown_pct": -4.765871531016252,
+          "buys": 2,
+          "liquidation_sells": 2,
+          "picks": [
+            "NVDA",
+            "BWXT"
+          ],
+          "excess_pp": -0.2879681125286693
+        }
+      },
+      "entry_adj_close": {
+        "GOOGL": 179.48959350585938,
+        "MSFT": 418.81402587890625,
+        "NVDA": 148.48159790039062,
+        "BWXT": 119.37504577636719
+      },
+      "exit_adj_close": {
+        "GOOGL": 173.49171447753906,
+        "MSFT": 437.54595947265625,
+        "NVDA": 142.06861877441406,
+        "BWXT": 124.50321197509766
+      },
+      "recorded_at": "2026-11-18T11:50:26.167867+00:00"
+    },
+    {
+      "scheduled": "2025-02-06",
+      "entry": "2024-11-07",
+      "observed_close": "2025-02-06",
+      "benchmark": {
+        "net_pct": -4.2264476253837895,
+        "max_drawdown_pct": -9.646701478404719,
+        "buys": 4,
+        "liquidation_sells": 4
+      },
+      "results": {
+        "growth": {
+          "net_pct": -7.996833800326519,
+          "max_drawdown_pct": -14.187623965748797,
+          "buys": 2,
+          "liquidation_sells": 2,
+          "picks": [
+            "NVDA",
+            "MSFT"
+          ],
+          "excess_pp": -3.77038617494273
+        },
+        "finance": {
+          "net_pct": -7.996833800326519,
+          "max_drawdown_pct": -14.187623965748797,
+          "buys": 2,
+          "liquidation_sells": 2,
+          "picks": [
+            "NVDA",
+            "MSFT"
+          ],
+          "excess_pp": -3.77038617494273
+        },
+        "trend": {
+          "net_pct": -10.279541526126646,
+          "max_drawdown_pct": -17.96123710175618,
+          "buys": 2,
+          "liquidation_sells": 2,
+          "picks": [
+            "NVDA",
+            "BWXT"
+          ],
+          "excess_pp": -6.053093900742857
+        },
+        "combined": {
+          "net_pct": -10.279541526126646,
+          "max_drawdown_pct": -17.96123710175618,
+          "buys": 2,
+          "liquidation_sells": 2,
+          "picks": [
+            "NVDA",
+            "BWXT"
+          ],
+          "excess_pp": -6.053093900742857
+        }
+      },
+      "entry_adj_close": {
+        "GOOGL": 179.48959350585938,
+        "MSFT": 418.81402587890625,
+        "NVDA": 148.48159790039062,
+        "BWXT": 119.37504577636719
+      },
+      "exit_adj_close": {
+        "GOOGL": 190.48199462890625,
+        "MSFT": 410.1728515625,
+        "NVDA": 128.34446716308594,
+        "BWXT": 111.45116424560547
+      },
+      "recorded_at": "2026-11-18T11:50:26.170112+00:00"
+    },
+    {
+      "scheduled": "2025-05-06",
+      "entry": "2024-11-07",
+      "observed_close": "2025-05-06",
+      "benchmark": {
+        "net_pct": -10.484303178725074,
+        "max_drawdown_pct": -27.85505448190202,
+        "buys": 4,
+        "liquidation_sells": 4
+      },
+      "results": {
+        "growth": {
+          "net_pct": -10.910465489795484,
+          "max_drawdown_pct": -27.351543281029358,
+          "buys": 2,
+          "liquidation_sells": 2,
+          "picks": [
+            "NVDA",
+            "MSFT"
+          ],
+          "excess_pp": -0.42616231107041
+        },
+        "finance": {
+          "net_pct": -10.910465489795484,
+          "max_drawdown_pct": -27.351543281029358,
+          "buys": 2,
+          "liquidation_sells": 2,
+          "picks": [
+            "NVDA",
+            "MSFT"
+          ],
+          "excess_pp": -0.42616231107041
+        },
+        "trend": {
+          "net_pct": -17.163732598730018,
+          "max_drawdown_pct": -34.19952080840027,
+          "buys": 2,
+          "liquidation_sells": 2,
+          "picks": [
+            "NVDA",
+            "BWXT"
+          ],
+          "excess_pp": -6.6794294200049436
+        },
+        "combined": {
+          "net_pct": -17.163732598730018,
+          "max_drawdown_pct": -34.19952080840027,
+          "buys": 2,
+          "liquidation_sells": 2,
+          "picks": [
+            "NVDA",
+            "BWXT"
+          ],
+          "excess_pp": -6.6794294200049436
+        }
+      },
+      "entry_adj_close": {
+        "GOOGL": 179.48959350585938,
+        "MSFT": 418.81402587890625,
+        "NVDA": 148.48159790039062,
+        "BWXT": 119.37504577636719
+      },
+      "exit_adj_close": {
+        "GOOGL": 162.46441650390625,
+        "MSFT": 428.2823486328125,
+        "NVDA": 113.25439453125,
+        "BWXT": 107.11424255371094
+      },
+      "recorded_at": "2026-11-18T11:50:26.173779+00:00"
+    },
+    {
+      "scheduled": "2025-11-06",
+      "entry": "2024-11-07",
+      "observed_close": "2025-11-06",
+      "benchmark": {
+        "net_pct": 40.681192792766495,
+        "max_drawdown_pct": -27.85505448190202,
+        "buys": 4,
+        "liquidation_sells": 4
+      },
+      "results": {
+        "growth": {
+          "net_pct": 21.80108212951959,
+          "max_drawdown_pct": -27.351543281029358,
+          "buys": 2,
+          "liquidation_sells": 2,
+          "picks": [
+            "NVDA",
+            "MSFT"
+          ],
+          "excess_pp": -18.880110663246906
+        },
+        "finance": {
+          "net_pct": 21.80108212951959,
+          "max_drawdown_pct": -27.351543281029358,
+          "buys": 2,
+          "liquidation_sells": 2,
+          "picks": [
+            "NVDA",
+            "MSFT"
+          ],
+          "excess_pp": -18.880110663246906
+        },
+        "trend": {
+          "net_pct": 43.65982035078944,
+          "max_drawdown_pct": -34.19952080840027,
+          "buys": 2,
+          "liquidation_sells": 2,
+          "picks": [
+            "NVDA",
+            "BWXT"
+          ],
+          "excess_pp": 2.978627558022943
+        },
+        "combined": {
+          "net_pct": 43.65982035078944,
+          "max_drawdown_pct": -34.19952080840027,
+          "buys": 2,
+          "liquidation_sells": 2,
+          "picks": [
+            "NVDA",
+            "BWXT"
+          ],
+          "excess_pp": 2.978627558022943
+        }
+      },
+      "entry_adj_close": {
+        "GOOGL": 179.48959350585938,
+        "MSFT": 418.81402587890625,
+        "NVDA": 148.48159790039062,
+        "BWXT": 119.37504577636719
+      },
+      "exit_adj_close": {
+        "GOOGL": 284.0113830566406,
+        "MSFT": 493.04339599609375,
+        "NVDA": 187.63047790527344,
+        "BWXT": 192.82496643066406
+      },
+      "recorded_at": "2026-11-18T11:50:26.181815+00:00"
+    }
+  ]
+}

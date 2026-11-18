@@ -10,6 +10,7 @@ from urllib.parse import urljoin
 from zoneinfo import ZoneInfo
 
 from research_inventory import collect
+from experiment_cards import cards as experiment_cards
 
 ROOT = Path('research_monitor')
 DOCS = Path('docs')
@@ -99,8 +100,22 @@ def azure_card(monitor, validation):
     health = 'IR 首页尚未链接 Q2 正式公告。' if monitor['status'] == 'waiting' else monitor.get('detail', '首次正式披露值已锁定。')
     winners = '、'.join(LABELS[key] for key in observation.get('winners', []))
     result = f'实际增速 {observation["actual"]}%，误差最小为{winners}。' if observation else 'Q2 预测为 49%；上一季为 48%，公司指引中点为 49.5%。'
+    from datetime import timedelta
+    checked_day = datetime.fromisoformat(monitor['checked_at']).astimezone(ZoneInfo('Asia/Shanghai'))
+    next_check = checked_day.replace(hour=16,minute=30,second=0,microsecond=0)
+    if next_check <= checked_day:
+        next_check += timedelta(days=1)
+    while next_check.weekday() >= 5:
+        next_check += timedelta(days=1)
+    next_label = '年度复评 2027-11-18' if observation else '下次计划检查 '+next_check.strftime('%Y-%m-%d %H:%M')+' 北京时间'
+    annual_review = '年度复评日 2027-11-18。届时按独立到期预测数及各基线误差评定。'
+    if checked_day.date().isoformat() >= '2027-11-18':
+        if observation:
+            annual_review = ('独立到期预测 1 项。研究预测绝对误差 '+str(errors['research'])+' 个百分点，持平外推 '+str(errors['last_quarter'])+'，指引中点 '+str(errors['guidance_midpoint'])+'。'+('继续跟踪，研究误差小于两项对照，需新增独立季度。' if errors['research'] < min(errors['last_quarter'],errors['guidance_midpoint']) else '归档本次预测，误差未同时优于两项对照。'))
+        else:
+            annual_review = '到期可评分预测 0 项，待核查官方披露及指标可比性后复评。'
     action = '复核实际披露与原文，比较三种预测的误差及原因。' if observation else '等待截至 2026-12-31 财季首次正式披露，自动锁定实际值并评分。'
-    return f'''<details class="study azure"><summary><div class="card-meta"><span class="status">{status}</span><span>自动监测</span></div><h3>微软 Azure 的效率提升能否支撑增长加速？</h3><p class="conclusion">{escape(result)}</p><p class="question">{escape(health)}</p><span class="expand-label">查看预测与监测 <span aria-hidden="true">＋</span></span></summary><div class="study-body"><dl><dt>当前进展</dt><dd>FY27 Q1 真实公告已验证，固定汇率同比为 {validation['actual']}%。最近检查 {escape(checked)}。</dd><dt>下一步行动</dt><dd>{action}</dd></dl><div class="table-scroll"><table><caption>FY27 Q2 · Azure 固定汇率同比增速</caption><thead><tr><th>预测依据</th><th>预测值</th><th>绝对误差 / 百分点</th></tr></thead><tbody>{rows}</tbody></table></div><p>以首次成功抓取的正式披露计算绝对误差，最小值并列记平局。首次观测锁定后保留，后续修订不覆盖。</p><h4>效率提升的原文</h4><blockquote lang="en">our ability to also create additional capacity within our existing fleet gave us some room to be able to convert that actually</blockquote><p>Amy Hood 回答 Karl Keirstead，说明现有设备释放容量。供给延迟、新效率收益及 token 定价仍影响下季结果。</p><p><a href="https://www.microsoft.com/en-us/investor/events/fy-2027/earnings-fy-2027-q1">阅读微软业绩会原文 ↗</a></p><div class="evidence-links"><a href="research/registration.md">原始登记</a><a href="research/addendum.json">追加对照与时间戳</a><a href="research/validation.json">上季抓取验证</a><a href="research/q1_release.html">公告快照</a><a href="research/runtime/status.json">当前监测结果</a></div></div></details>'''
+    return f'''<details class="study azure"><summary><div class="card-meta"><span class="status">{status}</span><span>自动监测</span></div><h3>微软 Azure 的效率提升能否支撑增长加速？</h3><p class="conclusion">{escape(result)}</p><p class="question">{escape(health)}</p><strong>{next_label}</strong><span class="expand-label">查看预测与监测 <span aria-hidden="true">＋</span></span></summary><div class="study-body"><dl><dt>当前进展</dt><dd>FY27 Q1 真实公告已验证，固定汇率同比为 {validation['actual']}%。最近检查 {escape(checked)}。</dd><dt>下一步行动</dt><dd>{action}</dd></dl><div class="table-scroll"><table><caption>FY27 Q2 · Azure 固定汇率同比增速</caption><thead><tr><th>预测依据</th><th>预测值</th><th>绝对误差 / 百分点</th></tr></thead><tbody>{rows}</tbody></table></div><p>以首次成功抓取的正式披露计算绝对误差，最小值并列记平局。首次观测锁定后保留，后续修订不覆盖。</p><h4>满一年综合评定</h4><p>{annual_review}</p><h4>效率提升的原文</h4><blockquote lang="en">our ability to also create additional capacity within our existing fleet gave us some room to be able to convert that actually</blockquote><p>Amy Hood 回答 Karl Keirstead，说明现有设备释放容量。供给延迟、新效率收益及 token 定价仍影响下季结果。</p><p><a href="https://www.microsoft.com/en-us/investor/events/fy-2027/earnings-fy-2027-q1">阅读微软业绩会原文 ↗</a></p><div class="evidence-links"><a href="research/registration.md">原始登记</a><a href="research/addendum.json">追加对照与时间戳</a><a href="research/validation.json">上季抓取验证</a><a href="research/q1_release.html">公告快照</a><a href="research/runtime/status.json">当前监测结果</a></div></div></details>'''
 
 
 def main():
@@ -115,11 +130,13 @@ def main():
     shutil.copytree(ROOT, DOCS / 'research', dirs_exist_ok=True)
     focused = [project for project in projects if project['focus']]
     archived = [project for project in projects if not project['focus']]
+    experiments = experiment_cards()
     substitutions = {
+        "{{EXPERIMENTS}}": "".join(experiments),
         '{{VERSION}}': version,
-        '{{FOCUS_COUNT}}': str(len(focused) + 1),
+        '{{FOCUS_COUNT}}': str(len(focused) + 1 + len(experiments)),
         '{{ARCHIVE_COUNT}}': str(len(archived)),
-        '{{TOTAL_COUNT}}': str(len(projects) + 1),
+        '{{TOTAL_COUNT}}': str(len(projects) + 1 + len(experiments)),
         '{{AZURE}}': azure_card(monitor, validation),
         '{{FOCUSED}}': ''.join(project_card(project) for project in focused),
         '{{ARCHIVED}}': ''.join(project_card(project) for project in archived),

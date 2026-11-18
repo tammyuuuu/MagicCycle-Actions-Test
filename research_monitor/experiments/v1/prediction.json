@@ -1,0 +1,119 @@
+{
+  "cutoff": "2026-11-06",
+  "inputs": {
+    "GOOGL": {
+      "filed": "2026-02-05",
+      "accession": "0001652044-26-000018",
+      "end": "2025-12-31",
+      "prior_end": "2024-12-31",
+      "revenue": 402836000000,
+      "prior_revenue": 350018000000,
+      "operating_income": 129039000000,
+      "operating_cash_flow": 164713000000,
+      "growth": 0.1509008108154437,
+      "margin": 0.32032638592380025,
+      "cash": 0.40888351587246424,
+      "trend_start": "2026-08-10",
+      "trend_end": "2026-11-06",
+      "trend": -0.20294515826777104
+    },
+    "MSFT": {
+      "filed": "2026-07-29",
+      "accession": "0001193125-26-323660",
+      "end": "2026-06-30",
+      "prior_end": "2025-06-30",
+      "revenue": 331839000000,
+      "prior_revenue": 281724000000,
+      "operating_income": 155237000000,
+      "operating_cash_flow": 182935000000,
+      "growth": 0.17788686799846665,
+      "margin": 0.4678081840892722,
+      "cash": 0.5512763719755664,
+      "trend_start": "2026-08-10",
+      "trend_end": "2026-11-06",
+      "trend": 0.050485831544563986
+    },
+    "NVDA": {
+      "filed": "2026-02-25",
+      "accession": "0001045810-26-000021",
+      "end": "2026-01-25",
+      "prior_end": "2025-01-26",
+      "revenue": 215938000000,
+      "prior_revenue": 130497000000,
+      "operating_income": 130387000000,
+      "operating_cash_flow": 102718000000,
+      "growth": 0.6547353579009478,
+      "margin": 0.6038168363141272,
+      "cash": 0.47568283488779184,
+      "trend_start": "2026-08-10",
+      "trend_end": "2026-11-06",
+      "trend": -0.14112229390592412
+    },
+    "BWXT": {
+      "filed": "2026-02-23",
+      "accession": "0001486957-26-000007",
+      "end": "2025-12-31",
+      "prior_end": "2024-12-31",
+      "revenue": 3198425000,
+      "prior_revenue": 2703654000,
+      "operating_income": 404459000,
+      "operating_cash_flow": 479848000,
+      "growth": 0.18300085735822713,
+      "margin": 0.12645567740372216,
+      "cash": 0.15002634108975513,
+      "trend_start": "2026-08-10",
+      "trend_end": "2026-11-06",
+      "trend": -0.29116290960426416
+    }
+  },
+  "portfolios": {
+    "growth": {
+      "scores": {
+        "GOOGL": 1.0,
+        "MSFT": 2.0,
+        "NVDA": 4.0,
+        "BWXT": 3.0
+      },
+      "picks": [
+        "NVDA",
+        "BWXT"
+      ]
+    },
+    "finance": {
+      "scores": {
+        "GOOGL": 1.6666666666666667,
+        "MSFT": 3.0,
+        "NVDA": 3.6666666666666665,
+        "BWXT": 1.6666666666666667
+      },
+      "picks": [
+        "NVDA",
+        "MSFT"
+      ]
+    },
+    "trend": {
+      "scores": {
+        "GOOGL": 2.0,
+        "MSFT": 4.0,
+        "NVDA": 3.0,
+        "BWXT": 1.0
+      },
+      "picks": [
+        "MSFT",
+        "NVDA"
+      ]
+    },
+    "combined": {
+      "scores": {
+        "GOOGL": 1.8333333333333333,
+        "MSFT": 3.5,
+        "NVDA": 3.3333333333333335,
+        "BWXT": 1.3333333333333333
+      },
+      "picks": [
+        "MSFT",
+        "NVDA"
+      ]
+    }
+  }
+}

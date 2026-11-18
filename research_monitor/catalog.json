@@ -1,0 +1,732 @@
+[
+  {
+    "title": "a_share_tech_20261107",
+    "path": "stock_research/a_share_tech_20261107",
+    "status": "待验证",
+    "reason": "已发现研究产物，待核验完成条件",
+    "files": 11,
+    "sources": [
+      "https://query1.finance.yahoo.com/v8/finance/chart/002230.SZ",
+      "https://query1.finance.yahoo.com/v8/finance/chart/002371.SZ",
+      "https://query1.finance.yahoo.com/v8/finance/chart/002415.SZ",
+      "https://query1.finance.yahoo.com/v8/finance/chart/002475.SZ",
+      "https://query1.finance.yahoo.com/v8/finance/chart/002594.SZ",
+      "https://query1.finance.yahoo.com/v8/finance/chart/300750.SZ",
+      "https://query1.finance.yahoo.com/v8/finance/chart/300760.SZ",
+      "https://query1.finance.yahoo.com/v8/finance/chart/510300.SS",
+      "https://query1.finance.yahoo.com/v8/finance/chart/588000.SS"
+    ],
+    "artifacts": [
+      "stock_research/a_share_tech_20261107/002230.SZ.json",
+      "stock_research/a_share_tech_20261107/002371.SZ.json",
+      "stock_research/a_share_tech_20261107/002415.SZ.json",
+      "stock_research/a_share_tech_20261107/002475.SZ.json",
+      "stock_research/a_share_tech_20261107/002594.SZ.json",
+      "stock_research/a_share_tech_20261107/300750.SZ.json",
+      "stock_research/a_share_tech_20261107/300760.SZ.json",
+      "stock_research/a_share_tech_20261107/510300.SS.json",
+      "stock_research/a_share_tech_20261107/588000.SS.json",
+      "stock_research/a_share_tech_20261107/manifest.json",
+      "stock_research/a_share_tech_20261107/returns.csv"
+    ],
+    "updated_at": "2026-11-07T12:17:16.017442+00:00"
+  },
+  {
+    "title": "be_study_20261109",
+    "path": "stock_research/be_study_20261109",
+    "status": "待验证",
+    "reason": "已发现研究产物，待核验完成条件",
+    "files": 4,
+    "sources": [],
+    "artifacts": [
+      "stock_research/be_study_20261109/entry_windows.csv",
+      "stock_research/be_study_20261109/orders.csv",
+      "stock_research/be_study_20261109/results.csv",
+      "stock_research/be_study_20261109/rolling.csv"
+    ],
+    "updated_at": "2026-11-09T11:17:06.819326+00:00"
+  },
+  {
+    "title": "brand_gate_20261107",
+    "path": "stock_research/brand_gate_20261107",
+    "status": "待验证",
+    "reason": "已发现研究产物，待核验完成条件",
+    "files": 4,
+    "sources": [
+      "https://inl.gov/news-release/inl-advances-department-of-wars-project-pele-demonstration-microreactor-with-first-triso-fuel-delivery/",
+      "https://investor.lilly.com/node/52651",
+      "https://investor.natera.com/news/news-details/2026/Natera-Reports-Third-Quarter-2026-Financial-Results/default.aspx",
+      "https://investors.bwxt.com/news-releases/news-release-details/bwx-technologies-reports-third-quarter-2026-results",
+      "https://investors.credosemi.com/news-events/news/news-details/2026/Credo-Technology-Group-Holding-Ltd-Reports-First-Quarter-of-Fiscal-Year-2027-Financial-Results/default.aspx",
+      "https://investors.planet.com/news/news-details/2026/Planet-Reports-Financial-Results-for-Second-Quarter-of-Fiscal-Year-2027/default.aspx",
+      "https://ir.symbotic.com/news-releases/news-release-details/symbotic-reports-third-quarter-fiscal-year-2026-results",
+      "https://static.brandirectory.com/reports/brand-finance-journal-b2b-2026-preview.pdf",
+      "https://storage.courtlistener.com/recap/gov.uscourts.dcd.223205/gov.uscourts.dcd.223205.1033.0.pdf",
+      "https://theacsi.com/industries/manufacturing/automobiles/"
+    ],
+    "artifacts": [
+      "stock_research/brand_gate_20261107/manifest.json",
+      "stock_research/brand_gate_20261107/reviews.json",
+      "stock_research/brand_gate_20261107/rules.json",
+      "stock_research/brand_gate_20261107/现有名单品牌复核.md"
+    ],
+    "updated_at": "2026-11-07T08:37:44.234025+00:00"
+  },
+  {
+    "title": "bwxt_25_20261109",
+    "path": "stock_research/bwxt_25_20261109",
+    "status": "待验证",
+    "reason": "已发现研究产物，待核验完成条件",
+    "files": 1,
+    "sources": [],
+    "artifacts": [
+      "stock_research/bwxt_25_20261109/entry_rolling.csv"
+    ],
+    "updated_at": "2026-11-09T13:14:23.006619+00:00"
+  },
+  {
+    "title": "crdo_study_20261109",
+    "path": "stock_research/crdo_study_20261109",
+    "status": "待验证",
+    "reason": "已发现研究产物，待核验完成条件",
+    "files": 3,
+    "sources": [],
+    "artifacts": [
+      "stock_research/crdo_study_20261109/orders.csv",
+      "stock_research/crdo_study_20261109/results.csv",
+      "stock_research/crdo_study_20261109/rolling.csv"
+    ],
+    "updated_at": "2026-11-09T10:59:37.086673+00:00"
+  },
+  {
+    "title": "five_tech_valuation_20261107",
+    "path": "stock_research/five_tech_valuation_20261107",
+    "status": "待验证",
+    "reason": "已发现研究产物，待核验完成条件",
+    "files": 5,
+    "sources": [
+      "https://chartexchange.com/symbol/nasdaq-msft/historical/",
+      "https://chartexchange.com/symbol/nasdaq-nvda/historical/",
+      "https://chartexchange.com/symbol/nasdaq-tsla/historical/",
+      "https://investor.apple.com/stock-price/",
+      "https://investor.nvidia.com/news/press-release-details/2026/NVIDIA-Announces-Financial-Results-for-Second-Quarter-Fiscal-2027/",
+      "https://stockanalysis.com/stocks/aapl/history/",
+      "https://stockanalysis.com/stocks/googl/history/",
+      "https://stockanalysis.com/stocks/msft/history/",
+      "https://stockanalysis.com/stocks/nvda/history/",
+      "https://stockanalysis.com/stocks/tsla/history/"
+    ],
+    "artifacts": [
+      "stock_research/five_tech_valuation_20261107/inputs.json",
+      "stock_research/five_tech_valuation_20261107/reverse_expectations.json",
+      "stock_research/five_tech_valuation_20261107/scenarios.json",
+      "stock_research/five_tech_valuation_20261107/sensitivity.json",
+      "stock_research/five_tech_valuation_20261107/估值测算底稿.md"
+    ],
+    "updated_at": "2026-11-07T09:07:31.439050+00:00"
+  },
+  {
+    "title": "four_strategy_20261109",
+    "path": "stock_research/four_strategy_20261109",
+    "status": "待验证",
+    "reason": "已发现研究产物，待核验完成条件",
+    "files": 3,
+    "sources": [],
+    "artifacts": [
+      "stock_research/four_strategy_20261109/BWXT_30_events.csv",
+      "stock_research/four_strategy_20261109/entry_rolling.csv",
+      "stock_research/four_strategy_20261109/GOOGL.json"
+    ],
+    "updated_at": "2026-11-09T13:13:58.796653+00:00"
+  },
+  {
+    "title": "frontier_companies_20261107",
+    "path": "stock_research/frontier_companies_20261107",
+    "status": "待验证",
+    "reason": "已发现研究产物，待核验完成条件",
+    "files": 2,
+    "sources": [],
+    "artifacts": [
+      "stock_research/frontier_companies_20261107/individual_returns.csv",
+      "stock_research/frontier_companies_20261107/price_inputs.json"
+    ],
+    "updated_at": "2026-11-07T05:10:02.726871+00:00"
+  },
+  {
+    "title": "frontier_scope_20261107",
+    "path": "stock_research/frontier_scope_20261107",
+    "status": "待验证",
+    "reason": "已发现研究产物，待核验完成条件",
+    "files": 3,
+    "sources": [
+      "https://inl.gov/news-release/inl-advances-department-of-wars-project-pele-demonstration-microreactor-with-first-triso-fuel-delivery/",
+      "https://investor.lilly.com/node/52651",
+      "https://www.nrc.gov/facilities-safety/new-reactors/advanced-reactors/who-were-working-with/past-licensing-activities/nuscale-us460/application-documents",
+      "https://www.sec.gov/Archives/edgar/data/1065059/000162828026007117/leu-20251231.htm",
+      "https://www.sec.gov/Archives/edgar/data/1604821/000110465926020881/ntra-20251231x10k.htm",
+      "https://www.sec.gov/Archives/edgar/data/1664703/000162828026006516/be-20251231.htm",
+      "https://www.sec.gov/Archives/edgar/data/1736297/000114036126016366/ny20065212x3_ars.pdf",
+      "https://www.sec.gov/Archives/edgar/data/1745999/000119312526065194/beam-20251231.htm",
+      "https://www.sec.gov/Archives/edgar/data/1753539/000175353926000032/bksy-20251231.htm",
+      "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000366/crwv-20260630.htm"
+    ],
+    "artifacts": [
+      "stock_research/frontier_scope_20261107/manifest.json",
+      "stock_research/frontier_scope_20261107/universe.json",
+      "stock_research/frontier_scope_20261107/研究范围与处理理由.md"
+    ],
+    "updated_at": "2026-11-07T05:47:44.879908+00:00"
+  },
+  {
+    "title": "fundamental_review_20261109",
+    "path": "stock_research/fundamental_review_20261109",
+    "status": "待验证",
+    "reason": "已发现研究产物，待核验完成条件",
+    "files": 10,
+    "sources": [],
+    "artifacts": [
+      "stock_research/fundamental_review_20261109/coverage.csv",
+      "stock_research/fundamental_review_20261109/events.csv",
+      "stock_research/fundamental_review_20261109/event_windows.csv",
+      "stock_research/fundamental_review_20261109/filings.csv",
+      "stock_research/fundamental_review_20261109/long_run.csv",
+      "stock_research/fundamental_review_20261109/long_run_complete.csv",
+      "stock_research/fundamental_review_20261109/暂停新增复核报告.md",
+      "stock_research/fundamental_review_20261109/研究报告.md"
+    ],
+    "updated_at": "2026-11-09T14:00:07.178314+00:00"
+  },
+  {
+    "title": "hk_tech_20261107",
+    "path": "stock_research/hk_tech_20261107",
+    "status": "待验证",
+    "reason": "已发现研究产物，待核验完成条件",
+    "files": 18,
+    "sources": [
+      "https://data.alibabagroup.com/ecms-files/1532295521/fa5d65fc-9b3e-4e82-a8fc-4ce1c3e2c407/Alibaba%20Group%20Announces%20June%20Quarter%202026%20Results.pdf",
+      "https://investor.lenovo.com/en/financial/results/press_2627_q1.pdf",
+      "https://ir.mi.com/static-files/b903a881-8143-44a3-b759-703653bbb043",
+      "https://m.volkswagengroupchina.com.cn/en/news/Detail?ArticleID=3BFA44027DCB45D4888E8990455427B9",
+      "https://owebsite-cdn.ubtrobot.com/resources/file/2026/09/25/852659715698757.pdf",
+      "https://query1.finance.yahoo.com/v8/finance/chart/0268.HK",
+      "https://query1.finance.yahoo.com/v8/finance/chart/0700.HK",
+      "https://query1.finance.yahoo.com/v8/finance/chart/0981.HK",
+      "https://query1.finance.yahoo.com/v8/finance/chart/0992.HK",
+      "https://query1.finance.yahoo.com/v8/finance/chart/1211.HK"
+    ],
+    "artifacts": [
+      "stock_research/hk_tech_20261107/corporate_action_audit.json",
+      "stock_research/hk_tech_20261107/download_manifest.json",
+      "stock_research/hk_tech_20261107/historical_lookback.csv",
+      "stock_research/hk_tech_20261107/output_hashes.json",
+      "stock_research/hk_tech_20261107/price_audit.json",
+      "stock_research/hk_tech_20261107/prospective_candidates.json",
+      "stock_research/hk_tech_20261107/return_curves.csv",
+      "stock_research/hk_tech_20261107/scope.json",
+      "stock_research/hk_tech_20261107/source_manifest.json",
+      "stock_research/hk_tech_20261107/valuation_browser_observations.json",
+      "stock_research/hk_tech_20261107/valuation_snapshot.json"
+    ],
+    "updated_at": "2026-11-07T12:01:15.418096+00:00"
+  },
+  {
+    "title": "mature_tech_v1",
+    "path": "stock_research/mature_tech_v1",
+    "status": "已完成",
+    "reason": "已有结果和审计产物，研究批次已产出；结论有效性见审计",
+    "files": 14,
+    "sources": [],
+    "artifacts": [
+      "stock_research/mature_tech_v1/audit.json",
+      "stock_research/mature_tech_v1/evaluated_members.csv",
+      "stock_research/mature_tech_v1/filings_2020.csv",
+      "stock_research/mature_tech_v1/filings_2021.csv",
+      "stock_research/mature_tech_v1/manifest.json",
+      "stock_research/mature_tech_v1/price_exclusions.csv",
+      "stock_research/mature_tech_v1/price_log.json",
+      "stock_research/mature_tech_v1/results.csv",
+      "stock_research/mature_tech_v1/rules.json",
+      "stock_research/mature_tech_v1/screen_2020.csv",
+      "stock_research/mature_tech_v1/screen_2021.csv",
+      "stock_research/mature_tech_v1/segments.csv"
+    ],
+    "updated_at": "2026-11-07T04:57:55.522633+00:00"
+  },
+  {
+    "title": "ntra_experiment_20261109",
+    "path": "stock_research/ntra_experiment_20261109",
+    "status": "待验证",
+    "reason": "已发现研究产物，待核验完成条件",
+    "files": 8,
+    "sources": [],
+    "artifacts": [
+      "stock_research/ntra_experiment_20261109/bil.json",
+      "stock_research/ntra_experiment_20261109/bil_fixed_results.csv",
+      "stock_research/ntra_experiment_20261109/bil_rolling.csv",
+      "stock_research/ntra_experiment_20261109/bil_switches.csv",
+      "stock_research/ntra_experiment_20261109/drawdown30_episodes.csv",
+      "stock_research/ntra_experiment_20261109/entry_windows.csv",
+      "stock_research/ntra_experiment_20261109/exploratory.csv",
+      "stock_research/ntra_experiment_20261109/stooq_ntra.csv"
+    ],
+    "updated_at": "2026-11-09T10:56:33.269978+00:00"
+  },
+  {
+    "title": "pl_study_20261109",
+    "path": "stock_research/pl_study_20261109",
+    "status": "待验证",
+    "reason": "已发现研究产物，待核验完成条件",
+    "files": 4,
+    "sources": [],
+    "artifacts": [
+      "stock_research/pl_study_20261109/entry_windows.csv",
+      "stock_research/pl_study_20261109/orders.csv",
+      "stock_research/pl_study_20261109/results.csv",
+      "stock_research/pl_study_20261109/rolling.csv"
+    ],
+    "updated_at": "2026-11-09T11:23:02.730659+00:00"
+  },
+  {
+    "title": "reference_price_20261109",
+    "path": "stock_research/reference_price_20261109",
+    "status": "待验证",
+    "reason": "已发现研究产物，待核验完成条件",
+    "files": 4,
+    "sources": [],
+    "artifacts": [
+      "stock_research/reference_price_20261109/latest.csv",
+      "stock_research/reference_price_20261109/windows.csv",
+      "stock_research/reference_price_20261109/研究说明.md"
+    ],
+    "updated_at": "2026-11-09T13:43:28.291509+00:00"
+  },
+  {
+    "title": "seven_company_economics_20261107",
+    "path": "stock_research/seven_company_economics_20261107",
+    "status": "待验证",
+    "reason": "已发现研究产物，待核验完成条件",
+    "files": 3,
+    "sources": [
+      "https://investor.natera.com/news/news-details/2026/Natera-Reports-Third-Quarter-2026-Financial-Results/default.aspx",
+      "https://investors.bwxt.com/news-releases/news-release-details/bwx-technologies-reports-third-quarter-2026-results",
+      "https://investors.credosemi.com/news-events/news/news-details/2026/Credo-Technology-Group-Holding-Ltd-Reports-First-Quarter-of-Fiscal-Year-2027-Financial-Results/default.aspx",
+      "https://investors.planet.com/news/news-details/2026/Planet-Reports-Financial-Results-for-Second-Quarter-of-Fiscal-Year-2027/default.aspx",
+      "https://ir.symbotic.com/news-releases/news-release-details/symbotic-reports-third-quarter-fiscal-year-2026-results",
+      "https://www.asteralabs.com/news/astera-labs-reports-third-quarter-2026-financial-results/",
+      "https://www.bloomenergy.com/news/bloom-energy-reports-record-third-quarter-2026-financial-results-and-raises-full-year-2026-guidance/",
+      "https://www.sec.gov/Archives/edgar/data/1486957/000148695726000051/bwxt-20260930.htm",
+      "https://www.sec.gov/Archives/edgar/data/1604821/000162828026071145/ntra-20260930.htm",
+      "https://www.sec.gov/Archives/edgar/data/1664703/000162828026066931/be-20260930.htm"
+    ],
+    "artifacts": [
+      "stock_research/seven_company_economics_20261107/financial_inputs.json",
+      "stock_research/seven_company_economics_20261107/scenario_results.json",
+      "stock_research/seven_company_economics_20261107/财务与情景测算.md"
+    ],
+    "updated_at": "2026-11-07T08:37:44.139579+00:00"
+  },
+  {
+    "title": "seven_returns_20261109",
+    "path": "stock_research/seven_returns_20261109",
+    "status": "待验证",
+    "reason": "已发现研究产物，待核验完成条件",
+    "files": 10,
+    "sources": [
+      "https://query1.finance.yahoo.com/v8/finance/chart/ALAB",
+      "https://query1.finance.yahoo.com/v8/finance/chart/BE",
+      "https://query1.finance.yahoo.com/v8/finance/chart/BWXT",
+      "https://query1.finance.yahoo.com/v8/finance/chart/CRDO",
+      "https://query1.finance.yahoo.com/v8/finance/chart/NTRA",
+      "https://query1.finance.yahoo.com/v8/finance/chart/PL",
+      "https://query1.finance.yahoo.com/v8/finance/chart/SYM"
+    ],
+    "artifacts": [
+      "stock_research/seven_returns_20261109/ALAB.json",
+      "stock_research/seven_returns_20261109/BE.json",
+      "stock_research/seven_returns_20261109/BWXT.json",
+      "stock_research/seven_returns_20261109/CRDO.json",
+      "stock_research/seven_returns_20261109/manifest.json",
+      "stock_research/seven_returns_20261109/NTRA.json",
+      "stock_research/seven_returns_20261109/PL.json",
+      "stock_research/seven_returns_20261109/returns.csv",
+      "stock_research/seven_returns_20261109/rolling.csv",
+      "stock_research/seven_returns_20261109/SYM.json"
+    ],
+    "updated_at": "2026-11-09T10:34:05.394249+00:00"
+  },
+  {
+    "title": "tech_comparison_20261107",
+    "path": "stock_research/tech_comparison_20261107",
+    "status": "待验证",
+    "reason": "已发现研究产物，待核验完成条件",
+    "files": 18,
+    "sources": [
+      "https://www.sec.gov/Archives/edgar/data/1819994/000181999426000062/rklb-20260630.htm",
+      "https://www.sec.gov/Archives/edgar/data/1824920/000119312526449829/ionq-20260930.htm",
+      "https://www.sec.gov/Archives/edgar/data/320193/000032019326000026/aapl-20260926.htm",
+      "https://www.sec.gov/Archives/edgar/data/789019/000119312526436133/msft-20260930.htm"
+    ],
+    "artifacts": [
+      "stock_research/tech_comparison_20261107/105.AAPL.json",
+      "stock_research/tech_comparison_20261107/105.AAPL_raw.json",
+      "stock_research/tech_comparison_20261107/105.CRSP.json",
+      "stock_research/tech_comparison_20261107/105.INTC.json",
+      "stock_research/tech_comparison_20261107/105.MSFT.json",
+      "stock_research/tech_comparison_20261107/105.MSFT_raw.json",
+      "stock_research/tech_comparison_20261107/105.PLTR.json",
+      "stock_research/tech_comparison_20261107/105.RKLB.json",
+      "stock_research/tech_comparison_20261107/105.RKLB_raw.json",
+      "stock_research/tech_comparison_20261107/105.TXN.json",
+      "stock_research/tech_comparison_20261107/106.IONQ.json",
+      "stock_research/tech_comparison_20261107/106.IONQ_raw.json"
+    ],
+    "updated_at": "2026-11-07T04:46:58.928476+00:00"
+  },
+  {
+    "title": "timing_backtest_20261107",
+    "path": "stock_research/timing_backtest_20261107",
+    "status": "待验证",
+    "reason": "已发现研究产物，待核验完成条件",
+    "files": 22,
+    "sources": [
+      "https://data.sec.gov/api/xbrl/companyfacts/CIK0000789019.json",
+      "https://data.sec.gov/api/xbrl/companyfacts/CIK0001045810.json",
+      "https://query1.finance.yahoo.com/v8/finance/chart/BIL",
+      "https://query1.finance.yahoo.com/v8/finance/chart/MSFT",
+      "https://query1.finance.yahoo.com/v8/finance/chart/NVDA",
+      "https://query1.finance.yahoo.com/v8/finance/chart/QQQ"
+    ],
+    "artifacts": [
+      "stock_research/timing_backtest_20261107/data_audit.json",
+      "stock_research/timing_backtest_20261107/equity_curves.csv",
+      "stock_research/timing_backtest_20261107/manifest.json",
+      "stock_research/timing_backtest_20261107/metrics.csv",
+      "stock_research/timing_backtest_20261107/MSFT_daily_PIT_signals.csv",
+      "stock_research/timing_backtest_20261107/MSFT_filing_snapshots.csv",
+      "stock_research/timing_backtest_20261107/MSFT_open_targets.csv",
+      "stock_research/timing_backtest_20261107/NVDA_daily_PIT_signals.csv",
+      "stock_research/timing_backtest_20261107/NVDA_filing_snapshots.csv",
+      "stock_research/timing_backtest_20261107/NVDA_open_targets.csv",
+      "stock_research/timing_backtest_20261107/output_hashes.json",
+      "stock_research/timing_backtest_20261107/rolling_summary.csv"
+    ],
+    "updated_at": "2026-11-07T11:04:17.743028+00:00"
+  },
+  {
+    "title": "timing_stability_20261107",
+    "path": "stock_research/timing_stability_20261107",
+    "status": "待验证",
+    "reason": "已发现研究产物，待核验完成条件",
+    "files": 22,
+    "sources": [],
+    "artifacts": [
+      "stock_research/timing_stability_20261107/analysis_plan.json",
+      "stock_research/timing_stability_20261107/attribution.csv",
+      "stock_research/timing_stability_20261107/cash_spells.csv",
+      "stock_research/timing_stability_20261107/event_coverage.csv",
+      "stock_research/timing_stability_20261107/event_removal.csv",
+      "stock_research/timing_stability_20261107/exante_monthly.csv",
+      "stock_research/timing_stability_20261107/monthly_rolling.csv",
+      "stock_research/timing_stability_20261107/nonoverlapping_windows.csv",
+      "stock_research/timing_stability_20261107/output_hashes.json",
+      "stock_research/timing_stability_20261107/price_EPS_PE.csv",
+      "stock_research/timing_stability_20261107/regime_summary.csv",
+      "stock_research/timing_stability_20261107/rolling_summary.csv"
+    ],
+    "updated_at": "2026-11-07T11:28:20.487429+00:00"
+  },
+  {
+    "title": "valuation_validation_20261107",
+    "path": "stock_research/valuation_validation_20261107",
+    "status": "待验证",
+    "reason": "已发现研究产物，待核验完成条件",
+    "files": 3,
+    "sources": [
+      "https://stockanalysis.com/stocks/adbe/statistics/",
+      "https://stockanalysis.com/stocks/avgo/statistics/",
+      "https://stockanalysis.com/stocks/orcl/statistics/",
+      "https://www.apple.com/newsroom/pdfs/fy2026q4/FY26_Q4_Consolidated_Financial_Statements.pdf",
+      "https://www.microsoft.com/en-us/Investor/events/fy-2027/earnings-fy-2027-q1",
+      "https://www.microsoft.com/investor/reports/ar26/",
+      "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000021/nvda-20260125.htm",
+      "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000075/nvda-20260726.htm",
+      "https://www.sec.gov/Archives/edgar/data/1318605/000162828026066775/tsla-20260930.htm",
+      "https://www.sec.gov/Archives/edgar/data/1652044/000165204426000084/goog-20260930.htm"
+    ],
+    "artifacts": [
+      "stock_research/valuation_validation_20261107/evidence.json",
+      "stock_research/valuation_validation_20261107/results.json",
+      "stock_research/valuation_validation_20261107/计算结果.md"
+    ],
+    "updated_at": "2026-11-07T09:36:47.150104+00:00"
+  },
+  {
+    "title": "baostock_cloud",
+    "path": "tenbagger_research/baostock_cloud",
+    "status": "待验证",
+    "reason": "已发现研究产物，待核验完成条件",
+    "files": 1,
+    "sources": [],
+    "artifacts": [
+      "tenbagger_research/baostock_cloud/baostock_test.json"
+    ],
+    "updated_at": "2026-11-11T12:34:27.058721+00:00"
+  },
+  {
+    "title": "cohort_2020_30",
+    "path": "tenbagger_research/cohort_2020_30",
+    "status": "待验证",
+    "reason": "已发现研究产物，待核验完成条件",
+    "files": 38,
+    "sources": [
+      "https://static.cninfo.com.cn/'+a.get('adjunctUrl',''",
+      "https://static.cninfo.com.cn/'+a['adjunctUrl'];f=s.get(url,timeout=30",
+      "https://static.cninfo.com.cn/'+a['adjunctUrl'];r=s.get(url,timeout=30",
+      "https://static.cninfo.com.cn/finalpage/2019-10-22/1206999134.PDF",
+      "https://static.cninfo.com.cn/finalpage/2019-10-22/1206999136.PDF",
+      "https://static.cninfo.com.cn/finalpage/2019-10-23/1207004054.PDF",
+      "https://static.cninfo.com.cn/finalpage/2019-10-23/1207004055.PDF",
+      "https://static.cninfo.com.cn/finalpage/2019-10-25/1207012584.PDF",
+      "https://static.cninfo.com.cn/finalpage/2019-10-25/1207012585.PDF",
+      "https://static.cninfo.com.cn/finalpage/2019-10-26/1207021129.PDF"
+    ],
+    "artifacts": [
+      "tenbagger_research/cohort_2020_30/backup_600727_sina_qfq_local.csv",
+      "tenbagger_research/cohort_2020_30/cninfo_download_log.json",
+      "tenbagger_research/cohort_2020_30/disclosure_audit_local.json",
+      "tenbagger_research/cohort_2020_30/facts_frozen.csv",
+      "tenbagger_research/cohort_2020_30/final_review_local.csv",
+      "tenbagger_research/cohort_2020_30/gap_bridges.json",
+      "tenbagger_research/cohort_2020_30/missing_2020_audit.json",
+      "tenbagger_research/cohort_2020_30/original_candidates_frozen.csv",
+      "tenbagger_research/cohort_2020_30/performance_20180930_local.csv",
+      "tenbagger_research/cohort_2020_30/performance_20190930_local.csv",
+      "tenbagger_research/cohort_2020_30/price_002125_qfq_local.csv",
+      "tenbagger_research/cohort_2020_30/price_002566_qfq_local.csv"
+    ],
+    "updated_at": "2026-11-12T14:07:07.175371+00:00"
+  },
+  {
+    "title": "cohort_raw",
+    "path": "tenbagger_research/cohort_raw",
+    "status": "待验证",
+    "reason": "已发现研究产物，待核验完成条件",
+    "files": 22,
+    "sources": [],
+    "artifacts": [
+      "tenbagger_research/cohort_raw/AAOI.json",
+      "tenbagger_research/cohort_raw/ACIW.json",
+      "tenbagger_research/cohort_raw/ADBE.json",
+      "tenbagger_research/cohort_raw/ADTN.json",
+      "tenbagger_research/cohort_raw/AEIS.json",
+      "tenbagger_research/cohort_raw/AIRG.json",
+      "tenbagger_research/cohort_raw/ALRM.json",
+      "tenbagger_research/cohort_raw/AMD.json",
+      "tenbagger_research/cohort_raw/AMKR.json",
+      "tenbagger_research/cohort_raw/ANET.json",
+      "tenbagger_research/cohort_raw/APH.json",
+      "tenbagger_research/cohort_raw/ATOM.json"
+    ],
+    "updated_at": "2026-11-11T03:45:45.529036+00:00"
+  },
+  {
+    "title": "csmar_2015_verification",
+    "path": "tenbagger_research/csmar_2015_verification",
+    "status": "待验证",
+    "reason": "已发现研究产物，待核验完成条件",
+    "files": 24,
+    "sources": [
+      "https://epaper.stcn.com/paper/zqsb/page/1/2015-10/30/B165/20151030B165_pdf.pdf'",
+      "https://static.cninfo.com.cn/finalpage/2015-10-29/1201735611.PDF'"
+    ],
+    "artifacts": [
+      "tenbagger_research/csmar_2015_verification/gap_audit_local.csv",
+      "tenbagger_research/csmar_2015_verification/local_results.csv",
+      "tenbagger_research/csmar_2015_verification/margin_company_local.csv",
+      "tenbagger_research/csmar_2015_verification/public_financials_asof.csv",
+      "tenbagger_research/csmar_2015_verification/selection.csv"
+    ],
+    "updated_at": "2026-11-12T03:46:01.845581+00:00"
+  },
+  {
+    "title": "csmar_2020_pilot",
+    "path": "tenbagger_research/csmar_2020_pilot",
+    "status": "待验证",
+    "reason": "已发现研究产物，待核验完成条件",
+    "files": 24,
+    "sources": [],
+    "artifacts": [
+      "tenbagger_research/csmar_2020_pilot/akshare_000568_qfq_local.csv",
+      "tenbagger_research/csmar_2020_pilot/akshare_000568_raw_local.csv",
+      "tenbagger_research/csmar_2020_pilot/akshare_600519_qfq_local.csv",
+      "tenbagger_research/csmar_2020_pilot/akshare_600519_raw_local.csv",
+      "tenbagger_research/csmar_2020_pilot/akshare_results_local.csv",
+      "tenbagger_research/csmar_2020_pilot/selection.csv",
+      "tenbagger_research/csmar_2020_pilot/下载尝试记录.md"
+    ],
+    "updated_at": "2026-11-12T06:34:04.667750+00:00"
+  },
+  {
+    "title": "pipeline",
+    "path": "tenbagger_research/pipeline",
+    "status": "待验证",
+    "reason": "已发现研究产物，待核验完成条件",
+    "files": 17,
+    "sources": [
+      "https://file.csmar.com/group1/M00/AA/99/CuIKV2XAnKiABeLbAB4nDGC5Ano840.pdf"
+    ],
+    "artifacts": [
+      "tenbagger_research/pipeline/calendar_sina.csv",
+      "tenbagger_research/pipeline/gap_evidence.csv",
+      "tenbagger_research/pipeline/gap_intervals.csv",
+      "tenbagger_research/pipeline/local_batch_results.csv",
+      "tenbagger_research/pipeline/README.md",
+      "tenbagger_research/pipeline/verified_suspensions.csv"
+    ],
+    "updated_at": "2026-11-11T12:19:43.107114+00:00"
+  },
+  {
+    "title": "public_snapshot",
+    "path": "tenbagger_research/public_snapshot",
+    "status": "待验证",
+    "reason": "已发现研究产物，待核验完成条件",
+    "files": 4,
+    "sources": [],
+    "artifacts": [],
+    "updated_at": "2026-11-11T14:36:07.176593+00:00"
+  },
+  {
+    "title": "public_snapshot_metadata",
+    "path": "tenbagger_research/public_snapshot_metadata",
+    "status": "待验证",
+    "reason": "已发现研究产物，待核验完成条件",
+    "files": 1,
+    "sources": [],
+    "artifacts": [],
+    "updated_at": "2026-11-11T12:33:12.405421+00:00"
+  },
+  {
+    "title": "scenario_2026",
+    "path": "tenbagger_research/scenario_2026",
+    "status": "待验证",
+    "reason": "已发现研究产物，待核验完成条件",
+    "files": 7,
+    "sources": [],
+    "artifacts": [
+      "tenbagger_research/scenario_2026/operating_driver_results.csv",
+      "tenbagger_research/scenario_2026/required_growth.csv",
+      "tenbagger_research/scenario_2026/required_terminal_pe.csv",
+      "tenbagger_research/scenario_2026/scenario_results.csv"
+    ],
+    "updated_at": "2026-11-12T14:38:49.733962+00:00"
+  },
+  {
+    "title": "audit",
+    "path": "investor_holdings_research/audit",
+    "status": "待验证",
+    "reason": "已发现研究产物，待核验完成条件",
+    "files": 7,
+    "sources": [
+      "https://www.efunds.com.cn/Mobile/fund/004744.shtml",
+      "https://www.ishares.com/us/literature/summary-prospectus/sp-ishares-russell-1000-growth-etf-3-31.pdf"
+    ],
+    "artifacts": [
+      "investor_holdings_research/audit/159915.SZ.json",
+      "investor_holdings_research/audit/comparison.csv",
+      "investor_holdings_research/audit/daily.csv",
+      "investor_holdings_research/audit/disclosure_events.csv",
+      "investor_holdings_research/audit/IWF.json",
+      "investor_holdings_research/audit/missing_prices.csv",
+      "investor_holdings_research/audit/审计报告.md"
+    ],
+    "updated_at": "2026-11-16T15:10:29.104812+00:00"
+  },
+  {
+    "title": "backtest",
+    "path": "investor_holdings_research/backtest",
+    "status": "待验证",
+    "reason": "已发现研究产物，待核验完成条件",
+    "files": 11,
+    "sources": [
+      "https://query1.finance.yahoo.com/v8/finance/chart/000333.SZ?period1=1672531200&period2=1794787200&interval=1d&events=div%2Csplits",
+      "https://query1.finance.yahoo.com/v8/finance/chart/000425.SZ?period1=1672531200&period2=1794787200&interval=1d&events=div%2Csplits",
+      "https://query1.finance.yahoo.com/v8/finance/chart/000858.SZ?period1=1672531200&period2=1794787200&interval=1d&events=div%2Csplits",
+      "https://query1.finance.yahoo.com/v8/finance/chart/002142.SZ?period1=1672531200&period2=1794787200&interval=1d&events=div%2Csplits",
+      "https://query1.finance.yahoo.com/v8/finance/chart/002244.SZ?period1=1672531200&period2=1794787200&interval=1d&events=div%2Csplits",
+      "https://query1.finance.yahoo.com/v8/finance/chart/002271.SZ?period1=1672531200&period2=1794787200&interval=1d&events=div%2Csplits",
+      "https://query1.finance.yahoo.com/v8/finance/chart/002353.SZ?period1=1672531200&period2=1794787200&interval=1d&events=div%2Csplits",
+      "https://query1.finance.yahoo.com/v8/finance/chart/002475.SZ?period1=1672531200&period2=1794787200&interval=1d&events=div%2Csplits",
+      "https://query1.finance.yahoo.com/v8/finance/chart/002594.SZ?period1=1672531200&period2=1794787200&interval=1d&events=div%2Csplits",
+      "https://query1.finance.yahoo.com/v8/finance/chart/002683.SZ?period1=1672531200&period2=1794787200&interval=1d&events=div%2Csplits"
+    ],
+    "artifacts": [
+      "investor_holdings_research/backtest/cusip_map.json",
+      "investor_holdings_research/backtest/excluded.csv",
+      "investor_holdings_research/backtest/fund_baseline.csv",
+      "investor_holdings_research/backtest/portfolio_daily.csv",
+      "investor_holdings_research/backtest/portfolio_summary.csv",
+      "investor_holdings_research/backtest/price_log.json",
+      "investor_holdings_research/backtest/sec_baseline.csv",
+      "investor_holdings_research/backtest/signals.csv",
+      "investor_holdings_research/backtest/signal_returns.csv",
+      "investor_holdings_research/backtest/signal_summary.csv",
+      "investor_holdings_research/backtest/研究报告.md"
+    ],
+    "updated_at": "2026-11-16T15:00:49.147612+00:00"
+  },
+  {
+    "title": "zhu_2015_2025",
+    "path": "investor_holdings_research/zhu_2015_2025",
+    "status": "待验证",
+    "reason": "已发现研究产物，待核验完成条件",
+    "files": 12,
+    "sources": [
+      "https://datacenter-web.eastmoney.com/api/data/v1/get?sortColumns=REPORT_DATE&sortTypes=-1&pageSize=500&pageNumber=1&reportName=RPT_SHAREBONUS_DET&columns=ALL&source=WEB&client=WEB&filter=%28SECURITY_CODE%3D%22000333%22%29",
+      "https://datacenter-web.eastmoney.com/api/data/v1/get?sortColumns=REPORT_DATE&sortTypes=-1&pageSize=500&pageNumber=1&reportName=RPT_SHAREBONUS_DET&columns=ALL&source=WEB&client=WEB&filter=%28SECURITY_CODE%3D%22000651%22%29",
+      "https://datacenter-web.eastmoney.com/api/data/v1/get?sortColumns=REPORT_DATE&sortTypes=-1&pageSize=500&pageNumber=1&reportName=RPT_SHAREBONUS_DET&columns=ALL&source=WEB&client=WEB&filter=%28SECURITY_CODE%3D%22000858%22%29",
+      "https://datacenter-web.eastmoney.com/api/data/v1/get?sortColumns=REPORT_DATE&sortTypes=-1&pageSize=500&pageNumber=1&reportName=RPT_SHAREBONUS_DET&columns=ALL&source=WEB&client=WEB&filter=%28SECURITY_CODE%3D%22002027%22%29",
+      "https://datacenter-web.eastmoney.com/api/data/v1/get?sortColumns=REPORT_DATE&sortTypes=-1&pageSize=500&pageNumber=1&reportName=RPT_SHAREBONUS_DET&columns=ALL&source=WEB&client=WEB&filter=%28SECURITY_CODE%3D%22002117%22%29",
+      "https://datacenter-web.eastmoney.com/api/data/v1/get?sortColumns=REPORT_DATE&sortTypes=-1&pageSize=500&pageNumber=1&reportName=RPT_SHAREBONUS_DET&columns=ALL&source=WEB&client=WEB&filter=%28SECURITY_CODE%3D%22002142%22%29",
+      "https://datacenter-web.eastmoney.com/api/data/v1/get?sortColumns=REPORT_DATE&sortTypes=-1&pageSize=500&pageNumber=1&reportName=RPT_SHAREBONUS_DET&columns=ALL&source=WEB&client=WEB&filter=%28SECURITY_CODE%3D%22002153%22%29",
+      "https://datacenter-web.eastmoney.com/api/data/v1/get?sortColumns=REPORT_DATE&sortTypes=-1&pageSize=500&pageNumber=1&reportName=RPT_SHAREBONUS_DET&columns=ALL&source=WEB&client=WEB&filter=%28SECURITY_CODE%3D%22002215%22%29",
+      "https://datacenter-web.eastmoney.com/api/data/v1/get?sortColumns=REPORT_DATE&sortTypes=-1&pageSize=500&pageNumber=1&reportName=RPT_SHAREBONUS_DET&columns=ALL&source=WEB&client=WEB&filter=%28SECURITY_CODE%3D%22002271%22%29",
+      "https://datacenter-web.eastmoney.com/api/data/v1/get?sortColumns=REPORT_DATE&sortTypes=-1&pageSize=500&pageNumber=1&reportName=RPT_SHAREBONUS_DET&columns=ALL&source=WEB&client=WEB&filter=%28SECURITY_CODE%3D%22002366%22%29"
+    ],
+    "artifacts": [
+      "investor_holdings_research/zhu_2015_2025/action_log.json",
+      "investor_holdings_research/zhu_2015_2025/candidate_status.csv",
+      "investor_holdings_research/zhu_2015_2025/combined_holdings.csv",
+      "investor_holdings_research/zhu_2015_2025/corporate_action_audit.csv",
+      "investor_holdings_research/zhu_2015_2025/coverage_thirdparty.csv",
+      "investor_holdings_research/zhu_2015_2025/holdings_thirdparty.csv",
+      "investor_holdings_research/zhu_2015_2025/official_crosscheck.csv",
+      "investor_holdings_research/zhu_2015_2025/official_parse_coverage.csv",
+      "investor_holdings_research/zhu_2015_2025/official_verified_holdings.csv",
+      "investor_holdings_research/zhu_2015_2025/preliminary_signals.csv",
+      "investor_holdings_research/zhu_2015_2025/price_log.json",
+      "investor_holdings_research/zhu_2015_2025/扩展研究报告.md"
+    ],
+    "updated_at": "2026-11-16T15:53:22.996462+00:00"
+  },
+  {
+    "title": "zhu_matched_validation",
+    "path": "investor_holdings_research/zhu_matched_validation",
+    "status": "待验证",
+    "reason": "已发现研究产物，待核验完成条件",
+    "files": 8,
+    "sources": [
+      "https://www.catl.com/uploads/1/file/public/202504/20250402224635_vbguqeg009.pdf），但这不能证明所有可能影响股数及所有样本证券的公司行为均已核实。"
+    ],
+    "artifacts": [
+      "investor_holdings_research/zhu_matched_validation/cohorts.csv",
+      "investor_holdings_research/zhu_matched_validation/constituents.csv",
+      "investor_holdings_research/zhu_matched_validation/daily.csv",
+      "investor_holdings_research/zhu_matched_validation/execution_log.csv",
+      "investor_holdings_research/zhu_matched_validation/paired_cohort_returns.csv",
+      "investor_holdings_research/zhu_matched_validation/stability.csv",
+      "investor_holdings_research/zhu_matched_validation/summary.csv",
+      "investor_holdings_research/zhu_matched_validation/验证报告.md"
+    ],
+    "updated_at": "2026-11-16T15:14:33.176243+00:00"
+  }
+]

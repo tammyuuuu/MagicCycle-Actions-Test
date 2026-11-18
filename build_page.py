@@ -1,24 +1,28 @@
+import hashlib, html, json, shutil
+from datetime import datetime, timezone
 from pathlib import Path
-import json, html, shutil, hashlib
-from datetime import datetime
-from asset_states import render_rail, render_basis
-rows=json.loads(Path('docs/index.json').read_text(encoding='utf8'))
-if not rows or any(r.get('status')=='error' for r in rows): raise SystemExit('数据校验失败，不生成页面')
-styles=Path('templates/_styles.html').read_text(encoding='utf8')
-investor_section=Path('templates/investor_section.html').read_text(encoding='utf8')
-investors_js_version=hashlib.sha256(Path('assets/investors.js').read_bytes()).hexdigest()[:12]
-investors_css_version=hashlib.sha256(Path('assets/investors.css').read_bytes()).hexdigest()[:12]
+from research_inventory import collect
+root=Path('research_monitor'); docs=Path('docs'); docs.mkdir(exist_ok=True)
+for obsolete in ('investors.html', 'investors.json', 'assets/investors.js', 'assets/investors.css'):
+    (docs / obsolete).unlink(missing_ok=True)
+catalog={p['path']:p for p in json.loads((root/'catalog.json').read_text(encoding='utf8'))}
+catalog.update({p['path']:p for p in collect()})
+monitor=json.loads((root/'runtime/status.json').read_text(encoding='utf8'))
+validation=json.loads((root/'validation.json').read_text(encoding='utf8'))
+e=html.escape; repo='https://github.com/tammyuuuu/MagicCycle-Actions-Test'
+data={'built_at':datetime.now(timezone.utc).isoformat(),'monitor':monitor,'projects':list(catalog.values()),'validation':validation}
+payload=json.dumps(data,ensure_ascii=False,indent=2); version=hashlib.sha256(payload.encode()).hexdigest()
+(docs/'research.json').write_text(payload,encoding='utf8'); shutil.copytree(root,docs/'research',dirs_exist_ok=True)
 cards=[]
-for r in rows:
- e=html.escape
- m=r['metrics']; date=e(r.get('date','未知'))
- cards.append(f'<article class="card"><h2>{e(r["name"])} <small>{e(r["symbol"])}</small></h2><p>行情日期 {date} · 收盘 {m.get("price", "—")} · {e(r.get("market_update", "行情数据"))}</p>{render_rail(r)}<details><summary>查看判断依据</summary>{render_basis(r)}</details></article>')
-now=datetime.now().strftime('%Y-%m-%d %H:%M')
-page=f'''<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#202e4b"><title>星循 · 今日提醒测试版</title>{styles}<link rel="stylesheet" href="assets/investors.css?v={investors_css_version}"><style>body{{margin:0}} .test-wrap{{max-width:760px;margin:auto;padding:16px}} .test-header{{background:#202e4b;color:white;padding:20px 16px}} .test-header h1{{margin:0}} .test-note{{font-size:14px;line-height:1.6}} .card{{margin:14px 0}} small{{font-size:14px}} a{{color:inherit}}</style></head><body><header class="test-header"><div class="test-wrap"><nav aria-label="主导航"><a href="index.html" aria-current="page">今日提醒</a>　｜　<a href="#investors">投资人追踪</a></nav><h1>星循 · 今日提醒</h1><p class="test-note">独立测试版 · 北京时间更新于 {now}<br>若自动更新失败，页面会保留上次成功数据；请核对每张卡片的行情日期。<br><a href="https://github.com/tammyuuuu/MagicCycle-Actions-Test/actions">查看更新状态与运行日志</a></p></div></header><main class="test-wrap">{investor_section}<section aria-label="今日提醒">{''.join(cards)}</section></main><script src="assets/investors.js?v={investors_js_version}" defer></script></body></html>'''
-Path('docs/index.html').write_text(page,encoding='utf8')
-Path('docs/assets').mkdir(exist_ok=True)
-shutil.copy2('assets/xingxun-serif-650.woff', 'docs/assets/xingxun-serif-650.woff')
-
-shutil.copy2('templates/investors.html', 'docs/investors.html')
-shutil.copy2('assets/investors.css', 'docs/assets/investors.css')
-shutil.copy2('assets/investors.js', 'docs/assets/investors.js')
+for p in catalog.values():
+    links=''.join(f'<li>{e(Path(a).name)}</li>' for a in p['artifacts'])
+    sources=''.join(f'<li><a href="{e(s)}">{e(s[:100])}</a></li>' for s in p['sources'])
+    cards.append(f'<article data-status="{p["status"]}"><span class="status">{p["status"]}</span><h3>{e(p["title"])}</h3><p>{e(p["reason"])}</p><small>{p["files"]} 项产物 · {p["updated_at"][:10]}</small><details><summary>产物与数据源</summary><ul>{links}{sources}</ul></details></article>')
+errors=monitor.get('observation',{}).get('errors_pp',{})
+table=''.join(f'<tr><td>{label}</td><td>{value}%</td><td>{errors.get(key,"待披露")}</td></tr>' for key,label,value in [('research','研究预测',49),('last_quarter','上一季外推',48),('guidance_midpoint','微软指引中点',49.5)])
+page='''<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Cycle 研究实验室</title><style>
+*{box-sizing:border-box}body{margin:0;background:#f4f3ed;color:#202e2b;font:16px/1.65 'Segoe UI',sans-serif}main{max-width:1180px;margin:auto;padding:40px 24px}header{border-bottom:1px solid #bdc6bf;padding-bottom:30px;margin-bottom:30px}a{color:#276450}nav{display:flex;justify-content:space-between;gap:16px}h1{font-family:Georgia,serif;font-size:clamp(34px,5vw,56px);margin:32px 0 8px;font-weight:500}h2{font-size:25px;font-weight:500}h3{overflow-wrap:anywhere;font-size:18px}p{color:#56665e}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(285px,1fr));gap:18px}article,.panel{background:#fffefa;border:1px solid #d8ddd5;border-radius:12px;padding:24px}.focus{display:grid;grid-template-columns:1.3fr 1fr;gap:24px}.status{display:inline-block;background:#e4ede4;color:#315d46;border-radius:30px;padding:3px 12px;font-size:13px}table{width:100%;border-collapse:collapse}td,th{text-align:left;padding:12px 5px;border-bottom:1px solid #e1e5de}small{color:#718076}button{padding:8px 18px;border:1px solid #b7c6bd;border-radius:25px;background:transparent;cursor:pointer;margin:0 8px 16px 0}button[aria-pressed=true]{background:#254d3e;color:white}details{margin-top:16px}li{overflow-wrap:anywhere}blockquote{margin:12px 0;padding-left:18px;border-left:3px solid #86a28b}footer{margin-top:40px;color:#64766a}@media(max-width:700px){.focus{grid-template-columns:1fr}main{padding:24px 16px}}
+</style></head><body><main data-version="VERSION"><header><nav><strong>CYCLE / 研究实验室</strong><a href="REPO/actions">自动运行日志 ↗</a></nav><h1>让研究接受下一季检验</h1><p>研究进展、公开证据与预测验证</p><small>页面生成于 BUILT · 时间均为 UTC</small></header><section class="focus"><div class="panel"><span class="status">MONITOR</span><h2>微软 Azure · FY27 Q2</h2><p>效率提升能否抵消算力交付推迟，让收入增速继续加快？</p><table><tr><th>预测依据</th><th>固定汇率同比</th><th>误差 / 百分点</th></tr>TABLE</table><p>按首次抓取的正式披露计算绝对误差，最小值并列时记平局。</p><small>CHECK</small><p><a href="research/registration.md">原始登记</a> · <a href="research/addendum.json">追加对照</a> · <a href="research/runtime/status.json">监测结果</a></p></div><div class="panel"><h2>验证与原因复核</h2><p>FY27 Q1 官方公告已提取 Azure 固定汇率同比 <strong>48%</strong>，与原登记一致。</p><a href="research/validation.json">验证记录</a> · <a href="research/q1_release.html">公告快照</a><blockquote>“our ability to also create additional capacity within our existing fleet gave us some room to be able to convert that actually”</blockquote><p>Amy Hood 回答 Karl Keirstead，谈现有设备容量与效率提升。</p><a href="https://www.microsoft.com/en-us/investor/events/fy-2027/earnings-fy-2027-q1">微软业绩会原文 ↗</a><p><a href="research/method.md">状态判定与监测规则</a></p></div></section><h2>研究项目 COUNT 项</h2><div id="filters">FILTERS</div><section class="grid">CARDS</section><footer><a href="research.json">下载首页数据</a> · <a href="REPO">查看仓库</a></footer></main><script>document.querySelectorAll('[data-filter]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-filter]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));document.querySelectorAll('[data-status]').forEach(x=>x.hidden=b.dataset.filter!=='全部'&&x.dataset.status!==b.dataset.filter)});</script></body></html>'''
+for key,value in {'VERSION':version,'REPO':repo,'BUILT':data['built_at'],'MONITOR':('已完成' if monitor['status']=='completed' else '待验证')+' · '+('监测异常' if monitor['status']=='error' else '自动监测'),'TABLE':table,'CHECK':e(monitor['checked_at']+' '+monitor.get('detail','已锁定首次观测')),'COUNT':str(len(catalog)),'CARDS':''.join(cards),'FILTERS':''.join(f'<button aria-pressed="{str(s=="全部").lower()}" data-filter="{s}">{s}</button>' for s in ['全部','运行中','待验证','已完成'])}.items():
+    page=page.replace(key,value)
+(docs/'index.html').write_text(page,encoding='utf8')

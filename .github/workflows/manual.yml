@@ -1,8 +1,10 @@
-name: Manual market test
+name: Research monitoring
 on:
   workflow_dispatch:
   push:
     branches: [main]
+    paths-ignore:
+      - "research_monitor/runtime/**"
   schedule:
     - cron: "30 8 * * 1-5"
 concurrency:
@@ -23,23 +25,15 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: python -m pip install -r requirements.txt
-      - run: python -m unittest -v test_market_safety test_close_validation
-      - uses: actions/cache/restore@v4
-        with:
-          path: data_cache
-          key: valuation-v1-${{ github.run_id }}-${{ github.run_attempt }}
-          restore-keys: valuation-v1-
-      - run: python run_check.py
+      - run: python -m pip install requests
+      - run: python -m unittest -v test_azure_monitor
+      - name: Restore published first observation
+        run: python restore_observation.py
+      - name: Monitor Azure first disclosure
+        id: monitor
+        continue-on-error: true
+        run: python azure_monitor.py
       - run: python build_page.py
-      - name: Update investor disclosures
-        run: |
-          cp data_cache/investors.json docs/investors.json 2>/dev/null || cp investor_tracker_seed.json docs/investors.json
-          python update_investors.py || echo "Update failed; retaining previous investor snapshot"
-      - uses: actions/cache/save@v4
-        with:
-          path: data_cache
-          key: valuation-v1-${{ github.run_id }}-${{ github.run_attempt }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: docs
@@ -52,7 +46,6 @@ jobs:
         with:
           name: market-test-results
           path: |
-            docs/index.json
-            docs/data-version.json
-            data_cache/etf_*.csv
+            docs/research.json
+            research_monitor/
           if-no-files-found: warn

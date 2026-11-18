@@ -1,0 +1,12 @@
+{
+  "appended_at": "2026-11-18T11:13:55.413526+00:00",
+  "prediction": 49.5,
+  "label": "微软指引中点",
+  "guidance_range": [
+    49,
+    50
+  ],
+  "unit": "percentage points",
+  "source": "https://www.microsoft.com/en-us/investor/events/fy-2027/earnings-fy-2027-q1",
+  "rule": "比较三种预测与首次正式披露值的绝对误差，最小值并列记平局"
+}

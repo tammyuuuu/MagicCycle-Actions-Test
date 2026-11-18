@@ -29,12 +29,15 @@ def quarterly_section():
     live = read(FOLDER/'quarterly-live.json')
     batches = live['batches']
     last = batches[-1]
+    example = next(b for b in reversed(history['batches']) if 'result' in b and any(c['out'] for c in b['comparisons']))
+    change = next(c for c in example['comparisons'] if c['out'])
     reviews = []
     for day,review in sorted(live.get('annual_reviews',{}).items()):
         returns = '；'.join(f'{NAMES[k]}净收益 {v["mean_net_pct"]:+.2f}%，相对基准 {v["mean_excess_pp"]:+.2f} 个百分点' for k,v in review['rules'].items())
         reviews.append(f'<p>{day}：已到期 {len(review["matured"])} 批，未到期 {len(review["pending"])} 批。{returns}。</p>')
     return ('<section><h2>季度重选与换股贡献</h2><p>每年 2、5、8、11 月 18 日登记，按当月 6 日或之前最近收盘评分，下一个交易日收盘建仓。每批独立等权持有一年，按季度核验。</p>'
             +f'<h3>最近登记 · {last["anchor"]}</h3>'+''.join(comparison(c) for c in last['comparisons'])
+            +f'<h3>最近到期的历史换股示例 · {example["anchor"]} 批次</h3>'+comparison(change)
             +'<p>差额为两组同日起止、扣除相同费率后的组合收益之差。两只股票各占一半，未换部分相互抵消。</p>'
             +'<details><summary>登记后各批次与年度汇总</summary>'+group(batches,'9998')+(''.join(reviews) or '<p>首次年度汇总预计 2027-11-18。</p>')+'</details>'
             +f'<details><summary>历史回放 · 截至 {history["asof"]}</summary><p>按今天固定的四股回看，存在样本选择和幸存者偏差。使用当时已申报年报、供应商事后复权价。缺少完整输入的 {len(history["skipped"])} 批已排除。重叠批次共享市场区间，平均值不代表独立试验或连续组合年化收益。</p>'

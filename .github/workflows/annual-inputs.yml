@@ -13,16 +13,12 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - run: pip install requests
-      - name: Extract original Q1 filings
+      - run: pip install requests duckdb
+      - name: Extract content-verified quarterly inputs
         run: |
           mkdir -p annual-inputs
-          for year in 2026 2022 2023 2024; do
-            if curl -fLsS --max-time 180 -A 'Cycle research (github.com/tammyuuuu/MagicCycle-Actions-Test)' "https://www.sec.gov/files/dera/data/financial-statement-data-sets/${year}q1.zip" -o quarter.zip; then
-              python annual_sec.py quarter.zip "$year" "annual-inputs/$year.json"
-            fi
-            sleep 4
-          done
+          curl -fLsS --retry 2 --max-time 900 'https://huggingface.co/datasets/erlenbusch/sec-edgar/resolve/main/sec_edgar.duckdb?download=true' -o sec_edgar.duckdb
+          python annual_mirror.py
       - uses: actions/upload-artifact@v4
         with:
           name: annual-inputs

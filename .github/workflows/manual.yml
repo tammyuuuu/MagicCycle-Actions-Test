@@ -35,6 +35,7 @@ jobs:
         run: python azure_monitor.py
       - name: Restore and evaluate registered experiments
         run: python experiment_tracker.py
+      - run: python quarterly_studies.py
       - run: python build_page.py
       - uses: actions/upload-pages-artifact@v3
         with:

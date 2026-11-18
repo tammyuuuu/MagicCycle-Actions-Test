@@ -10,6 +10,7 @@ from urllib.parse import urljoin
 from zoneinfo import ZoneInfo
 
 from research_inventory import collect
+from quarterly_view import quarterly_section
 from experiment_cards import cards as experiment_cards
 
 ROOT = Path('research_monitor')
@@ -132,6 +133,7 @@ def main():
     archived = [project for project in projects if not project['focus']]
     experiments = experiment_cards()
     substitutions = {
+        "{{QUARTERLY}}": quarterly_section(),
         "{{EXPERIMENTS}}": "".join(experiments),
         '{{VERSION}}': version,
         '{{FOCUS_COUNT}}': str(len(focused) + 1 + len(experiments)),

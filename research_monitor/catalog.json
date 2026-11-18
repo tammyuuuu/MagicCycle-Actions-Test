@@ -49,7 +49,7 @@
       "https://www.sec.gov/Archives/edgar/data/789019/000119312526436133/msft-20260930.htm"
     ],
     "source_changed": false,
-    "report_date": "2026-11-06"
+    "report_date": "2026-11-09"
   },
   {
     "id": "zhu-long",
@@ -85,7 +85,7 @@
       "https://www.psbc.com/cn/grfw/tzlc/jj/jjcpgg/202201/t20220124_161106.html"
     ],
     "source_changed": false,
-    "report_date": "2026-11-17"
+    "report_date": "日期见报告"
   },
   {
     "id": "factor-study",
@@ -120,7 +120,7 @@
       "https://www.nber.org/papers/w8282"
     ],
     "source_changed": false,
-    "report_date": "2020-03-31"
+    "report_date": "日期见报告"
   },
   {
     "id": "business-scenarios",
@@ -156,7 +156,7 @@
       "https://www.microsoft.com/investor/reports/ar26/"
     ],
     "source_changed": false,
-    "report_date": "2026-11-12"
+    "report_date": "日期见报告"
   },
   {
     "id": "be",
@@ -184,7 +184,7 @@
       "https://www.sec.gov/Archives/edgar/data/1664703/000162828018011710/bloomenergycorp6-30x1810q.htm"
     ],
     "source_changed": false,
-    "report_date": "2026-11-06"
+    "report_date": "2026-11-09"
   },
   {
     "id": "crdo",
@@ -211,7 +211,7 @@
       "https://www.sec.gov/Archives/edgar/data/1807794/000162828026043303/crdo-20260502.htm"
     ],
     "source_changed": false,
-    "report_date": "2026-11-06"
+    "report_date": "2026-11-09"
   },
   {
     "id": "ntra",
@@ -238,7 +238,7 @@
       "https://www.sec.gov/Archives/edgar/data/1604821/000110465926020881/ntra-20251231x10k.htm"
     ],
     "source_changed": false,
-    "report_date": "2021-05-20"
+    "report_date": "2026-11-09"
   },
   {
     "id": "timing",
@@ -291,7 +291,7 @@
     "focus": false,
     "sources": [],
     "source_changed": false,
-    "report_date": "2026-11-06"
+    "report_date": "2026-11-09"
   },
   {
     "id": "entry",
@@ -319,7 +319,7 @@
       "https://investor.nvidia.com/files/doc_downloads/2024/06/nvidia-2024-stock-split_faq_investors.pdf"
     ],
     "source_changed": false,
-    "report_date": "2026-11-06"
+    "report_date": "2026-11-09"
   },
   {
     "id": "mature",
@@ -520,7 +520,7 @@
       "https://www.sec.gov/Archives/edgar/data/1836833/000162828022012644/pl-20220131.htm"
     ],
     "source_changed": false,
-    "report_date": "2026-11-06"
+    "report_date": "2026-11-09"
   },
   {
     "id": "holding-signals",
@@ -558,7 +558,7 @@
       "https://www.ishares.com/us/literature/summary-prospectus/sp-ishares-russell-1000-growth-etf-3-31.pdf"
     ],
     "source_changed": false,
-    "report_date": "2023-10-26"
+    "report_date": "日期见报告"
   },
   {
     "id": "data-feasibility",
@@ -612,6 +612,6 @@
       "https://www.sz.gov.cn/cn/xxgk/zfxxgj/tjsj/tjgb/content/post_1333723.html"
     ],
     "source_changed": false,
-    "report_date": "2026-11-11"
+    "report_date": "日期见报告"
   }
 ]

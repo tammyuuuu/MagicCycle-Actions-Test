@@ -43,12 +43,13 @@ def collect(snapshot=False):
                 project['status'] = {'running': '研究中', 'completed': '阶段完成', 'waiting': '等待验证', 'blocked': '受阻'}.get(state.get('status'), project['status'])
                 project['progress'] = state.get('reason', project['progress'])
                 project['next_action'] = state.get('next_action', project['next_action'])
+                project['focus'] = state.get('status') in ('running', 'waiting', 'blocked')
         if changed:
             project.update(status='待复核', progress='原始报告已更新，以下摘要对应上次已复核版本。',
                            next_action='对照更新后的原始报告，复核结论与研究状态。', focus=True)
-        date_matches = re.findall(r'202\d[-—]\d{2}[-—]\d{2}|202\d年\d{1,2}月\d{1,2}日', reports[0]['content'][:2000])
+        date_matches = re.findall(r'^(?:研究日期|研究日|日期|资料截点)[：: ]*(202\d-\d{2}-\d{2})', reports[0]['content'], re.M)
         filename_date = re.search(r'(202\d)(\d{2})(\d{2})', reports[0]['original'])
-        project['report_date'] = date_matches[0] if date_matches else ('-'.join(filename_date.groups()) if filename_date else '日期见报告')
+        project['report_date'] = '-'.join(filename_date.groups()) if filename_date else (date_matches[0] if date_matches else '日期见报告')
         projects.append(project)
     return projects
 

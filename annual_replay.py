@@ -17,7 +17,7 @@ def attribution(picks,returns):
     combined=set(picks['combined'])
     k=len(trend)
     legs=defaultdict(float)
-    for s in trend^combined:
+    for s in sorted(trend^combined):
         v=returns[s]
         if v is None:return None
         if s in trend:

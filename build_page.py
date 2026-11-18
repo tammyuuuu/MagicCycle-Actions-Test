@@ -10,6 +10,7 @@ from urllib.parse import urljoin
 from zoneinfo import ZoneInfo
 
 from research_inventory import collect
+from expanded_view import expanded_section
 from quarterly_view import quarterly_section
 from experiment_cards import cards as experiment_cards
 
@@ -134,6 +135,7 @@ def main():
     experiments = experiment_cards()
     substitutions = {
         "{{QUARTERLY}}": quarterly_section(),
+        "{{EXPANDED}}": expanded_section(),
         "{{EXPERIMENTS}}": "".join(experiments),
         '{{VERSION}}': version,
         '{{FOCUS_COUNT}}': str(len(focused) + 1 + len(experiments)),

@@ -7,7 +7,7 @@ on:
       - "research_monitor/runtime/**"
   schedule:
     - cron: "30 8 * * 1-5"
-    - cron: "30 10,11 * * 5"
+    - cron: "30 10,11 * * 1-5"
     - cron: "30 21 18-21 2,5,8,11 *"
 concurrency:
   group: market-data-test

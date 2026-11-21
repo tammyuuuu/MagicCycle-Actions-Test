@@ -34,8 +34,14 @@ class Gold21Test(unittest.TestCase):
         self.run_at(maturity,quote)
         self.assertEqual([c.args[0] for c in quote.call_args_list],["2026-12-04",row["target"]])
         results=self.state["batches"][0]["records"]
-        self.assertEqual(len(results),9)
-        self.assertEqual([r["h"] for r in results if "verification" not in r],[63]*4)
+        self.assertEqual(len(results),8)
+        self.assertEqual([r["h"] for r in results if "verification" not in r],[63]*3)
+        self.assertEqual(row["extension_sha256"],g.EXTENSION_SHA256)
+        for horizon,names in g.ACTIVE.items():
+            self.assertEqual(tuple(r["model"] for r in results if r["h"]==horizon),names)
+        up=next(r for r in results if r["model"]=="始终看涨")
+        self.assertGreater(up["point"],up["anchor"])
+        self.assertEqual(up["version"],"Au9999-63-always-up-v1")
         for old,new in zip(frozen[0]["records"],results):
             self.assertEqual(old,{k:v for k,v in new.items() if k!="verification"})
         for r in results:
@@ -63,6 +69,14 @@ class Gold21Test(unittest.TestCase):
         self.run_at(self.now+timedelta(days=1))
         self.load.assert_not_called()
         self.assertFalse(self.state["batches"])
+
+    def test_week_ending_on_exchange_holiday(self):
+        thursday=datetime(2027,2,4,16,30,tzinfo=g.CN)
+        self.load.return_value={**self.data,"closes":{
+            str(g.shift(thursday.date(),-i)):800+i*.2 for i in range(64)}}
+        self.run_at(thursday)
+        self.run_at(thursday+timedelta(days=1))
+        self.assertEqual([b["origin"] for b in self.state["batches"]],["2027-02-04"])
 
     def test_model_freeze(self):
         import hashlib
@@ -95,3 +109,5 @@ class Gold21Test(unittest.TestCase):
         self.assertIn("810.00",page)
         self.assertIn("预测持平，实际上涨",page)
         self.assertIn("待验证",page)
+        self.assertIn("始终看涨",page)
+        self.assertIn("ARIMA＋BP",page)

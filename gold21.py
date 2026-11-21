@@ -19,6 +19,9 @@ MODEL = ROOT / "model.json"
 NAMES = ("宏观", "组合收缩", "持平")
 HORIZONS = ROOT / "horizons.json"
 EXTRA_SHA256 = "555d476f0de65f2e87c077f63077a508cfe815b0bee2106b338dc1ed2569740f"
+EXTENSION = ROOT / "extension.json"
+EXTENSION_SHA256 = "cdca1f7228b39c11edad709102ba62232850a54cac92c3a71cfe3f1b7191dbd4"
+ACTIVE = {5: ("ARIMA＋BP", "持平"), 21: NAMES, 63: ("自回归", "始终看涨", "持平")}
 GRAPH = "https://www.sge.com.cn/graph/Dailyhq"
 ALFRED = "https://alfred.stlouisfed.org/graph/alfredgraph.csv"
 MODEL_SHA256 = "9254b9e4a7248567ab055c8571a153697a5e8b6d9a55abcffdbcdb153cc7d54f"
@@ -133,9 +136,36 @@ def digest(value):
     return hashlib.sha256(json.dumps(value,sort_keys=True).encode()).hexdigest()
 
 
+def hybrid_point(closes, model, h):
+    prices = [closes[d] for d in sorted(closes)]
+    log_prices = [math.log(p) for p in prices]
+    returns = [b-a for a,b in zip(log_prices,log_prices[1:])]
+    intercept, ar1, ar2 = model["ar"]
+    ma, scale = model["ma"], model["scale"]
+    inputs, bias, outputs, output_bias = model["weights"]
+    innovation = 0.0
+    residuals = []
+    for i in range(2,len(returns)):
+        estimate = intercept + ar1*returns[i-1] + ar2*returns[i-2] + ma*innovation
+        innovation = returns[i]-estimate
+        residuals.append(prices[i+1]*(-math.expm1(-innovation))/scale)
+    previous, current = returns[-2:]
+    linear = prices[-1]
+    for _ in range(h):
+        estimate = intercept + ar1*current + ar2*previous + ma*innovation
+        linear *= math.exp(estimate)
+        previous, current = current, estimate
+        innovation = 0.0
+        hidden = [math.tanh(b + sum(w*x for w,x in zip(column,residuals[-12:])))
+                  for b,column in zip(bias,zip(*inputs))]
+        correction = output_bias[0] + sum(v*w[0] for v,w in zip(hidden,outputs))
+        residuals.append(correction)
+    return linear + scale*correction
+
+
 def register(origin, data, locked, kind):
-    core, extra = read(MODEL), read(HORIZONS)
-    if digest(core)!=MODEL_SHA256 or digest(extra)!=EXTRA_SHA256:
+    core, extra, extension = read(MODEL), read(HORIZONS), read(EXTENSION)
+    if digest(core)!=MODEL_SHA256 or digest(extra)!=EXTRA_SHA256 or digest(extension)!=EXTENSION_SHA256:
         raise ValueError("冻结参数校验失败")
     anchor=data["closes"][str(origin)]
     factors=features(data)
@@ -143,23 +173,29 @@ def register(origin, data, locked, kind):
     records=[]
     primary=forecast(anchor,factors,core)
     for h,target in targets.items():
-        predictions=primary
-        version=core["version"]
-        if h!=21:
-            version=extra["version"]
-            predictions={}
-            for name,model in extra["models"][str(h)].items():
-                ret=model["intercept"]+sum(w*factors[k] for k,w in model["weights"].items())
+        for name in ACTIVE[h]:
+            if h==21:
+                pred,version=primary[name],core["version"]
+            else:
+                model=extra["models"][str(h)].get(name)
+                if name in ("ARIMA＋BP","始终看涨"):
+                    model=extension[str(h)]
+                    version=model["version"]
+                    point=(hybrid_point(data["closes"],model,h) if h==5
+                           else anchor*math.exp(model["drift"]))
+                else:
+                    version=extra["version"]
+                    ret=model["intercept"]+sum(w*factors[k] for k,w in model["weights"].items())
+                    point=anchor*math.exp(ret)
                 sigma=factors["vol"]*math.sqrt(h)
                 lo,hi=model["interval"]
-                predictions[name]=dict(point=anchor*math.exp(ret),low=anchor*math.exp(ret+lo*sigma),
-                                       high=anchor*math.exp(ret+hi*sigma))
-        for name,pred in predictions.items():
+                pred=dict(point=point,low=point*math.exp(lo*sigma),high=point*math.exp(hi*sigma))
             records.append(dict(h=h,model=name,version=version,origin=str(origin),registered=locked.isoformat(),
                                 anchor=anchor,target=target,**pred))
     return dict(origin=str(origin),target=targets[21],registered=locked.isoformat(),kind=kind,
                 cutoff=f"{origin}T15:30:00+08:00",anchor=anchor,inputs=data,forecasts=primary,
-                version=core["version"],model_sha256=MODEL_SHA256,extra_sha256=EXTRA_SHA256,records=records)
+                version=core["version"],model_sha256=MODEL_SHA256,extra_sha256=EXTRA_SHA256,
+                extension_sha256=EXTENSION_SHA256,records=records)
 
 
 def direction(change):
@@ -212,20 +248,23 @@ def settle(state, now, clock, quote):
 def update(state, now, clock, load=inputs, quote=fetch):
     day=now.date()
     settle(state,now,clock,quote)
-    issued = {b["origin"] for b in state["batches"]}
+    issued = {date.fromisoformat(b["origin"]).isocalendar()[:2] for b in state["batches"]}
     friday = FIRST
-    while friday <= day:
-        key = str(friday)
-        if key not in issued and trading(friday):
-            if friday < day or now.time() >= time(20):
-                state["gaps"].setdefault(key,"未在周五登记窗口取得完整数据，留空")
+    while friday-timedelta(days=4) <= day:
+        origin = friday
+        while origin.weekday() > 0 and not trading(origin):
+            origin -= timedelta(days=1)
+        key = str(origin)
+        if origin <= day and origin.isocalendar()[:2] not in issued and trading(origin):
+            if origin < day or now.time() >= time(20):
+                state["gaps"].setdefault(key,"未在当周最后交易日的登记窗口取得完整数据，留空")
             elif now.time() >= time(15,30):
                 try:
-                    data = load(friday)
+                    data = load(origin)
                     locked=clock()
                     if locked.date()!=day or locked.time()>=time(20):
                         raise ValueError("取数完成时已过登记窗口")
-                    state["batches"].append(register(friday,data,locked,"周五登记"))
+                    state["batches"].append(register(origin,data,locked,"周末交易日登记"))
                     state["gaps"].pop(key,None)
                 except (ValueError,RuntimeError,requests.RequestException,KeyError) as exc:
                     state["gaps"][key]=str(exc)[:320]
@@ -273,6 +312,9 @@ def card(today=None):
     batches=sorted(state["batches"],key=lambda b:b["registered"])
     all_rows=[r for b in batches for r in records(b,state["settlements"])]
     hist=read(HORIZONS)["backtest"]
+    extension=read(EXTENSION)
+    for key,name in [("5","ARIMA＋BP"),("63","始终看涨")]:
+        hist[key][name]=extension[key]["backtest"]
     sections=[]
     for h in (5,21,63):
         rows=[r for r in all_rows if r["h"]==h]
@@ -281,11 +323,13 @@ def card(today=None):
                 for r in rows if r["registered"]==latest]
         next_due=min((r["target"] for r in rows if "verification" not in r),default="暂无")
         sections.append(f'<section><h4>{h} 个交易日'+("（主要评价）" if h==21 else "")+f'</h4><p>下次验证 {next_due}</p>')
+        sections.append(f"<p>每周登记模型 {'、'.join(ACTIVE[h])}。</p>")
         if latest:
-            sections.append(f"<p>登记 {escape(latest[:19].replace('T',' '))}，当时金价 {price(rows[-1]['anchor'])} 元/克。</p>")
-        sections.append(table(["本期模型","预测价","80% 区间","预计验证日"],points) if points else "<p>等待首次登记</p>")
+            sections.append(f"<p>最近登记 {escape(latest[:19].replace('T',' '))}，当时金价 {price(rows[-1]['anchor'])} 元/克。</p>")
+        sections.append(table(["最近登记模型","预测价","80% 区间","预计验证日"],points) if points else "<p>等待首次登记</p>")
         stats=[]; historical=[]; annual=[]; independent=[]
-        for name,ref in hist[str(h)].items():
+        for name in dict.fromkeys((*ACTIVE[h], *(r["model"] for r in rows))):
+            ref=hist[str(h)][name]
             selected=[r for r in rows if r["model"]==name]
             stats.append([name,*performance(selected)])
             historical.append([name,int(ref["n"]),price(ref["mae"]),f'{ref["gain"]:.2f}%',f'{ref["direction"]:.1f}%',f'{ref["coverage"]:.1f}%'])
@@ -320,13 +364,14 @@ def card(today=None):
                         price(check["actual"]) if check else "—",price(check["error"]) if check else "—",status])
     gaps="；".join(escape(f"{k} {v}") for k,v in sorted(state["gaps"].items())[-6:]) or "暂无已知缺口"
     return ('<article class="study gold-forecast" id="gold21"><h3>Au99.99 金价前瞻实验</h3>'
-            '<p>单位为元/克，时间为北京时间。每周五收盘后登记。</p>'+''.join(sections)+
+            '<p>单位为元/克，时间为北京时间。每周最后一个交易日收盘后登记。63 日始终看涨基准使用训练期平均收益，预测价约为当时金价的 101.59%。</p>'+''.join(sections)+
             '<h4>逐批预测与检验</h4><p>按登记时间从早到晚排列，误差为预测价减实际收盘价。</p>'+
             table(["登记时间","行情日","当时金价","交易日数","模型","预测价","80% 区间","预计验证日",
                    "实际检验时间","实际价","误差","方向判断"],history)+
             f'<p>数据缺口 · {gaps}</p><p>首年复评 {REVIEW}。21 日、63 日相邻周窗口共享行情，另按不重叠窗口复核。</p>'
             '<a href="research/gold21/ledger.json">完整登记与检验</a> · <a href="research/gold21/model.json">21 日冻结参数</a> · '
-            '<a href="research/gold21/horizons.json">5、63 日冻结参数与历史成绩</a> · <a href="research/experiments/gold.json">早期区间回归实验记录</a></article>')
+            '<a href="research/gold21/extension.json">ARIMA＋BP 与始终看涨冻结参数</a> · '
+            '<a href="research/gold21/horizons.json">既有 5、63 日冻结参数与历史成绩</a> · <a href="research/experiments/gold.json">早期区间回归实验记录</a></article>')
 
 
 def launch(state,clock):

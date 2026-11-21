@@ -72,5 +72,9 @@ footer div { display:flex; gap:18px; flex-wrap:wrap; }
 @media(max-width:700px) { main { padding:0 20px; } .masthead { padding:20px 0; flex-wrap:wrap; gap:10px; } .brand { font-size:27px; } nav { gap:20px; } .overview { grid-template-columns:1fr; gap:30px; padding:36px 0; } .overview-counts { justify-content:flex-start; gap:30px; } .overview-counts div { padding:0 24px 0 0; border-left:0; border-right:1px solid var(--line); } .overview-counts dd { font-size:32px; margin-top:6px; } .overview-counts div:last-child { border:0; } .section-heading { display:block; } .section-heading p { margin-top:8px; } .study-grid { grid-template-columns:1fr; gap:14px; } .study > summary { padding:20px 20px 16px; } .study-body { padding:0 20px 22px; } h3 { font-size:19px; } .archive-tools { gap:10px; } .filter { min-width:115px; } input,select { font-size:14px; padding:10px; } footer { flex-direction:column; } .report-body .table-scroll { margin-left:-8px; margin-right:-8px; } }
 @media(prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } }
 
-.gold-forecast { padding: clamp(16px, 3vw, 26px); }
+.gold-forecast { grid-column: 1 / -1; padding: clamp(16px, 3vw, 26px); }
 .gold-forecast li { margin-block: 6px; }
+
+.gold-forecast .table-scroll { max-height: 36rem; }
+.gold-forecast th, .gold-forecast td { white-space: nowrap; }
+.gold-forecast section { border-top: 1px solid var(--line); margin-top: 1rem; }

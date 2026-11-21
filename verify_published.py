@@ -16,6 +16,8 @@ for attempt in range(12):
             gold_ok = json.load(r)==json.loads(Path('docs/research/gold21/ledger.json').read_bytes())
         with urllib.request.urlopen(base+'research/gold21/model.json'+suffix,timeout=15) as r:
             gold_ok &= json.load(r)==json.loads(Path('docs/research/gold21/model.json').read_bytes())
+        with urllib.request.urlopen(base+'research/gold21/horizons.json'+suffix,timeout=15) as r:
+            gold_ok &= json.load(r)==json.loads(Path('docs/research/gold21/horizons.json').read_bytes())
         if gold_ok and 'id="gold21"' in page and annual_ok and json.loads(actual)==json.loads(expected) and version in page:
             print('Research deployment verified'); break
     except Exception as exc: print(str(exc))

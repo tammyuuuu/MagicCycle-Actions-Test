@@ -9,6 +9,7 @@ from pathlib import Path
 from urllib.parse import urljoin
 from zoneinfo import ZoneInfo
 
+from gold21 import card as gold_card
 from research_inventory import collect
 from expanded_view import expanded_section
 from annual_view import annual_section
@@ -137,11 +138,11 @@ def main():
     substitutions = {
         "{{QUARTERLY}}": quarterly_section(),
         "{{EXPANDED}}": annual_section() + expanded_section(),
-        "{{EXPERIMENTS}}": "".join(experiments),
+        "{{EXPERIMENTS}}": gold_card() + "".join(experiments),
         '{{VERSION}}': version,
-        '{{FOCUS_COUNT}}': str(len(focused) + 1 + len(experiments)),
+        '{{FOCUS_COUNT}}': str(len(focused) + 2 + len(experiments)),
         '{{ARCHIVE_COUNT}}': str(len(archived)),
-        '{{TOTAL_COUNT}}': str(len(projects) + 1 + len(experiments)),
+        '{{TOTAL_COUNT}}': str(len(projects) + 2 + len(experiments)),
         '{{AZURE}}': azure_card(monitor, validation),
         '{{FOCUSED}}': ''.join(project_card(project) for project in focused),
         '{{ARCHIVED}}': ''.join(project_card(project) for project in archived),

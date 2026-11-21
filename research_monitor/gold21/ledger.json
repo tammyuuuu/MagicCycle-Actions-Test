@@ -265,6 +265,9 @@
       ]
     }
   ],
+  "classifications": {
+    "2026-11-20": "启动期延迟登记"
+  },
   "settlements": {},
   "gaps": {}
 }

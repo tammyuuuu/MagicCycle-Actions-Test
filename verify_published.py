@@ -20,7 +20,10 @@ for attempt in range(12):
             gold_ok &= json.load(r)==json.loads(Path('docs/research/gold21/horizons.json').read_bytes())
         with urllib.request.urlopen(base+'research/gold21/extension.json'+suffix,timeout=15) as r:
             gold_ok &= json.load(r)==json.loads(Path('docs/research/gold21/extension.json').read_bytes())
-        if gold_ok and 'id="gold21"' in page and 'ARIMA＋BP' in page and '始终看涨' in page and annual_ok and json.loads(actual)==json.loads(expected) and version in page:
+        with urllib.request.urlopen(base+'research/gold21/sge_calendar.json'+suffix,timeout=15) as r:
+            gold_ok &= json.load(r)==json.loads(Path('docs/research/gold21/sge_calendar.json').read_bytes())
+        gold_labels = ('id="gold21"', '严格前瞻成绩 · 按期登记', '启动期延迟登记成绩', '历史试算成绩')
+        if gold_ok and all(label in page for label in gold_labels) and annual_ok and json.loads(actual)==json.loads(expected) and version in page:
             print('Research deployment verified'); break
     except Exception as exc: print(str(exc))
     time.sleep(10)

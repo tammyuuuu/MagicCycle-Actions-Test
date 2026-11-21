@@ -1,7 +1,7 @@
 import copy
 import json
 import unittest
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 from unittest.mock import Mock, patch
 
 import gold21 as g
@@ -71,12 +71,55 @@ class Gold21Test(unittest.TestCase):
         self.assertFalse(self.state["batches"])
 
     def test_week_ending_on_exchange_holiday(self):
-        thursday=datetime(2027,2,4,16,30,tzinfo=g.CN)
+        thursday=datetime(2026,6,18,16,30,tzinfo=g.CN)
         self.load.return_value={**self.data,"closes":{
             str(g.shift(thursday.date(),-i)):800+i*.2 for i in range(64)}}
-        self.run_at(thursday)
-        self.run_at(thursday+timedelta(days=1))
-        self.assertEqual([b["origin"] for b in self.state["batches"]],["2027-02-04"])
+        with patch.object(g,"FIRST",date(2026,6,19)):
+            self.run_at(thursday)
+            self.run_at(thursday+timedelta(days=1))
+        batch,=self.state["batches"]
+        self.assertEqual(batch["origin"],"2026-06-18")
+        self.assertEqual(batch["registration_deadline"],"2026-06-22T08:45:00+08:00")
+
+    def test_lock_uses_post_computation_clock_and_enforces_open(self):
+        fetched=self.now.replace(hour=19,minute=44,second=59)
+        deadline=fetched+timedelta(seconds=1)
+        g.update(self.state,fetched,Mock(side_effect=[fetched,deadline]),load=self.load,quote=Mock())
+        self.assertEqual(self.state["batches"],[])
+        self.assertIn("锁定时间",self.state["gaps"]["2026-11-27"])
+        locked=fetched+timedelta(milliseconds=500)
+        g.update(self.state,fetched,Mock(side_effect=[fetched,locked]),load=self.load,quote=Mock())
+        batch,=self.state["batches"]
+        self.assertEqual(batch["cutoff"],"2026-11-27T15:30:00+08:00")
+        self.assertEqual(batch["fetched_at"],fetched.isoformat())
+        self.assertEqual(batch["registered"],locked.isoformat())
+        self.assertTrue(all(row["registered"]==locked.isoformat() for row in batch["records"]))
+
+    def test_unconfirmed_calendar_blocks_registration(self):
+        now=datetime(2027,2,4,16,30,tzinfo=g.CN)
+        self.run_at(now)
+        self.load.assert_not_called()
+        self.assertIn("正式日历",self.state["gaps"]["2027-02-05"])
+
+    def test_delayed_batch_settles_but_stays_out_of_strict_scores(self):
+        state=g.read(g.LEDGER)
+        before=copy.deepcopy(state["batches"][0])
+        for h,target in ((5,"2026-11-27"),(21,"2026-12-21"),(63,"2027-02-26")):
+            now=datetime.fromisoformat(target+"T16:00:00+08:00")
+            g.settle(state,now,lambda:now,Mock(return_value={"close":810,"source":"test"}))
+            rows=[r for r in state["batches"][0]["records"] if r["h"]==h]
+            self.assertTrue(all(r["verification"]["actual"]==810 for r in rows))
+        self.assertEqual(g.scores(state["batches"],state["settlements"]),{})
+        for old,new in zip(before["records"],state["batches"][0]["records"],strict=True):
+            self.assertEqual(old,{k:v for k,v in new.items() if k!="verification"})
+        original=g.read
+        with patch.object(g,"read",side_effect=lambda p:state if p==g.LEDGER else original(p)):
+            page=g.card(g.REVIEW)
+        self.assertEqual(page.count("按期登记 0 条"),3)
+        self.assertEqual(page.count("启动期延迟登记成绩"),3)
+        self.assertEqual(page.count("首年严格前瞻评定"),3)
+        self.assertIn("Au9999-5-63-study-v1",page)
+        self.assertIn("810.00",page)
 
     def test_model_freeze(self):
         import hashlib

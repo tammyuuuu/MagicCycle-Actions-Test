@@ -27,7 +27,10 @@ ALFRED = "https://alfred.stlouisfed.org/graph/alfredgraph.csv"
 MODEL_SHA256 = "9254b9e4a7248567ab055c8571a153697a5e8b6d9a55abcffdbcdb153cc7d54f"
 FIRST = date(2026, 11, 27)
 REVIEW = date(2027, 11, 21)
-CLOSED = json.loads(Path("ashare_calendar.json").read_text(encoding="utf8"))["closed_ranges"] + BREAKS
+CALENDAR_FILE = ROOT / "sge_calendar.json"
+CALENDAR = json.loads(CALENDAR_FILE.read_text(encoding="utf8"))
+ON_TIME = "按期登记"
+DELAYED = "启动期延迟登记"
 
 
 def read(path):
@@ -35,10 +38,12 @@ def read(path):
 
 
 def trading(day):
-    if day.year > 2027:
+    schedule = CALENDAR["years"].get(str(day.year))
+    if schedule is None and day.year > 2027:
         import exchange_calendars
         return exchange_calendars.get_calendar("XSHG").is_session(str(day))
-    return day.weekday() < 5 and not any(lo <= str(day) <= hi for lo, hi in CLOSED)
+    closed = schedule["closed_ranges"] if schedule else BREAKS
+    return day.weekday() < 5 and not any(lo <= str(day) <= hi for lo, hi in closed)
 
 
 def shift(day, n):
@@ -48,6 +53,15 @@ def shift(day, n):
         while not trading(day):
             day += timedelta(days=step)
     return day
+
+
+def registration_deadline(origin):
+    following = shift(origin, 1)
+    if str(following.year) not in CALENDAR["years"]:
+        raise ValueError("缺少下一交易日的上金所正式日历")
+    no_night = any(str(origin) in year["no_night"] for year in CALENDAR["years"].values())
+    return (datetime.combine(following, time(8,45), CN) if no_night
+            else datetime.combine(origin, time(19,45), CN))
 
 
 def inputs(day):
@@ -225,6 +239,10 @@ def records(batch, settlements):
     return result
 
 
+def registration_class(batch, classifications):
+    return classifications.get(batch["origin"], ON_TIME if batch.get("kind")==ON_TIME else "早期登记")
+
+
 def settle(state, now, clock, quote):
     cache={}
     for batch in state["batches"]:
@@ -233,6 +251,11 @@ def settle(state, now, clock, quote):
             if "verification" in row or now<datetime.combine(date.fromisoformat(target),time(15,30),CN):
                 continue
             try:
+                if row.get("target_calendar_confirmed") is False:
+                    if target[:4] not in CALENDAR["years"]:
+                        raise ValueError("待上金所正式日历核对目标日")
+                    if str(shift(date.fromisoformat(row["origin"]),row["h"])) != target:
+                        raise ValueError("正式日历与锁定目标日不符，待审计")
                 if target not in cache:
                     bar=quote(target)
                     cache[target]=dict(actual=bar["close"],target=target,source=bar["source"],observed=clock().isoformat())
@@ -251,29 +274,45 @@ def update(state, now, clock, load=inputs, quote=fetch):
     issued = {date.fromisoformat(b["origin"]).isocalendar()[:2] for b in state["batches"]}
     friday = FIRST
     while friday-timedelta(days=4) <= day:
+        if str(friday.year) not in CALENDAR["years"]:
+            state["gaps"].setdefault(str(friday), "缺少上金所正式日历，本周未登记")
+            friday += timedelta(days=7)
+            continue
         origin = friday
         while origin.weekday() > 0 and not trading(origin):
             origin -= timedelta(days=1)
         key = str(origin)
         if origin <= day and origin.isocalendar()[:2] not in issued and trading(origin):
-            if origin < day or now.time() >= time(20):
-                state["gaps"].setdefault(key,"未在当周最后交易日的登记窗口取得完整数据，留空")
-            elif now.time() >= time(15,30):
-                try:
+            try:
+                cutoff = datetime.combine(origin, time(15,30), CN)
+                deadline = registration_deadline(origin)
+                if now >= deadline:
+                    state["gaps"].setdefault(key, f"超过登记截止 {deadline.isoformat()}，当周留空")
+                elif now >= cutoff:
                     data = load(origin)
-                    locked=clock()
-                    if locked.date()!=day or locked.time()>=time(20):
-                        raise ValueError("取数完成时已过登记窗口")
-                    state["batches"].append(register(origin,data,locked,"周末交易日登记"))
+                    fetched = clock()
+                    if not cutoff <= fetched < deadline:
+                        raise ValueError("完整数据抓取时间超出登记窗口")
+                    batch = register(origin,data,fetched,ON_TIME)
+                    locked = clock()
+                    if not fetched <= locked < deadline:
+                        raise ValueError("预测锁定时间超出登记窗口")
+                    batch.update(registered=locked.isoformat(), fetched_at=fetched.isoformat(),
+                                 registration_deadline=deadline.isoformat())
+                    for row in batch["records"]:
+                        row["registered"] = locked.isoformat()
+                        row["target_calendar_confirmed"] = str(date.fromisoformat(row["target"]).year) in CALENDAR["years"]
+                    state["batches"].append(batch)
                     state["gaps"].pop(key,None)
-                except (ValueError,RuntimeError,requests.RequestException,KeyError) as exc:
-                    state["gaps"][key]=str(exc)[:320]
+            except (ValueError,RuntimeError,requests.RequestException,KeyError) as exc:
+                state["gaps"][key]=str(exc)[:320]
         friday += timedelta(days=7)
 
 
 def scores(batches, settlements):
     result = {}
-    pairs = [(b,settlements[b["origin"]]["actual"]) for b in batches if b["origin"] in settlements]
+    pairs = [(b,settlements[b["origin"]]["actual"]) for b in batches
+             if b.get("kind")==ON_TIME and b["origin"] in settlements]
     if pairs:
         flat = mean(abs(b["anchor"]-a) for b,a in pairs)
         sign = lambda x:(x>0)-(x<0)
@@ -306,12 +345,23 @@ def performance(rows):
             f"{mean(r['verification']['covered'] for r in done):.1%}"]
 
 
+def performance_rows(rows):
+    groups = {}
+    for row in rows:
+        groups.setdefault((row["model"],row["version"]),[]).append(row)
+    return [[*key,*performance(group)] for key,group in groups.items()]
+
+
 def card(today=None):
     state=read(LEDGER)
     today=today or datetime.now(CN).date()
     batches=sorted(state["batches"],key=lambda b:b["registered"])
-    all_rows=[r for b in batches for r in records(b,state["settlements"])]
+    classifications=state.get("classifications",{})
+    all_rows=[dict(r,category=registration_class(b,classifications),cutoff=b["cutoff"],
+                   fetched_at=b.get("fetched_at"),deadline=b.get("registration_deadline"))
+              for b in batches for r in records(b,state["settlements"])]
     hist=read(HORIZONS)["backtest"]
+    history_versions={h:read(MODEL if h==21 else HORIZONS)["version"] for h in (5,21,63)}
     extension=read(EXTENSION)
     for key,name in [("5","ARIMA＋BP"),("63","始终看涨")]:
         hist[key][name]=extension[key]["backtest"]
@@ -319,38 +369,47 @@ def card(today=None):
     for h in (5,21,63):
         rows=[r for r in all_rows if r["h"]==h]
         latest=rows[-1]["registered"] if rows else None
-        points=[[r["model"],price(r["point"]),f'{price(r["low"])}–{price(r["high"])}',r["target"]]
+        points=[[r["category"],r["model"],r["version"],price(r["point"]),
+                 f'{price(r["low"])}–{price(r["high"])}',r["target"],
+                 "待官方日历确认" if r.get("target_calendar_confirmed") is False else "—"]
                 for r in rows if r["registered"]==latest]
         next_due=min((r["target"] for r in rows if "verification" not in r),default="暂无")
         sections.append(f'<section><h4>{h} 个交易日'+("（主要评价）" if h==21 else "")+f'</h4><p>下次验证 {next_due}</p>')
         sections.append(f"<p>每周登记模型 {'、'.join(ACTIVE[h])}。</p>")
         if latest:
             sections.append(f"<p>最近登记 {escape(latest[:19].replace('T',' '))}，当时金价 {price(rows[-1]['anchor'])} 元/克。</p>")
-        sections.append(table(["最近登记模型","预测价","80% 区间","预计验证日"],points) if points else "<p>等待首次登记</p>")
-        stats=[]; historical=[]; annual=[]; independent=[]
-        for name in dict.fromkeys((*ACTIVE[h], *(r["model"] for r in rows))):
-            ref=hist[str(h)][name]
-            selected=[r for r in rows if r["model"]==name]
-            stats.append([name,*performance(selected)])
-            historical.append([name,int(ref["n"]),price(ref["mae"]),f'{ref["gain"]:.2f}%',f'{ref["direction"]:.1f}%',f'{ref["coverage"]:.1f}%'])
-            if today>=REVIEW:
-                cohort=[r for r in selected if r["registered"][:10]<str(REVIEW)]
-                annual.append([name,*performance(cohort)])
-                sample=[]
-                for r in cohort:
-                    if "verification" in r and (not sample or r["origin"]>=sample[-1]["target"]):
-                        sample.append(r)
-                independent.append([name,*performance(sample)])
+        sections.append(table(["登记类别","最近登记模型","版本","预测价","80% 区间","预计验证日","日历备注"],points) if points else "<p>等待首次登记</p>")
+        strict=[r for r in rows if r["category"]==ON_TIME]
+        delayed=[r for r in rows if r["category"]==DELAYED]
+        historical=[]
+        for name,ref in hist[str(h)].items():
+            version=extension[str(h)]["version"] if name in ("ARIMA＋BP","始终看涨") else history_versions[h]
+            historical.append([name,version,int(ref["n"]),price(ref["mae"]),f'{ref["gain"]:.2f}%',f'{ref["direction"]:.1f}%',f'{ref["coverage"]:.1f}%'])
         labels=["模型","已验证","MAE","较持平改善","方向正确率","区间命中率"]
-        sections.append("<h5>前瞻成绩</h5>"+table(labels,stats)+"<details><summary>历史独立测试成绩</summary>"+table(labels,historical)+"</details>")
-        if annual:
-            sections.append("<h5>首年综合评价</h5>"+table(labels,annual)+"<p>不重叠窗口复核</p>"+table(labels,independent))
+        versioned=labels[:1]+["版本"]+labels[1:]
+        sections.append("<h5>严格前瞻成绩 · 按期登记</h5>"+
+                        (table(versioned,performance_rows(strict)) if strict else "<p>按期登记 0 条</p>"))
+        if delayed:
+            sections.append("<h5>启动期延迟登记成绩</h5>"+table(versioned,performance_rows(delayed)))
+        sections.append("<details><summary>历史试算成绩</summary>"+table(versioned,historical)+"</details>")
+        if today>=REVIEW:
+            cohort=[r for r in strict if r["target"]<=str(REVIEW)]
+            sample=[]
+            last_target={}
+            for r in cohort:
+                key=(r["model"],r["version"])
+                if "verification" in r and r["origin"]>=last_target.get(key,""):
+                    sample.append(r)
+                    last_target[key]=r["target"]
+            sections.append("<h5>首年严格前瞻评定</h5>"+table(versioned,performance_rows(cohort))+
+                            "<p>不重叠窗口复核</p>"+table(versioned,performance_rows(sample)))
         sections.append("</section>")
     history=[]
     timeline=list(all_rows)
     for old in read(Path("research_monitor/experiments/gold.json")):
         for f in old["forecasts"]:
-            row=dict(f,model=old["model"],registered=old["registered"],origin=old["origin"],anchor=old["bar"]["close"])
+            row=dict(f,model="区间回归",version=old["model"],category="早期独立登记",
+                     registered=old["registered"],origin=old["origin"],cutoff=old["cutoff"],anchor=old["bar"]["close"])
             if "actual" in f:
                 row["verification"]=outcome(row,dict(actual=f["actual"],observed=f["observed"]))
             timeline.append(row)
@@ -358,38 +417,23 @@ def card(today=None):
         check=r.get("verification")
         status=(("正确" if check["direction_correct"] else "错误")+f'（预测{check["predicted_direction"]}，实际{check["actual_direction"]}）'
                 if check else "待验证")
-        history.append([r["registered"][:19].replace("T"," "),r["origin"],price(r["anchor"]),r["h"],r["model"],
+        history.append([r["category"],r["registered"],r["cutoff"],r.get("fetched_at") or "未保存",
+                        r.get("deadline") or "—",r["origin"],price(r["anchor"]),r["h"],r["model"],r["version"],
                         price(r["point"]),f'{price(r["low"])}–{price(r["high"])}',r["target"],
                         check["observed"][:19].replace("T"," ") if check else "—",
                         price(check["actual"]) if check else "—",price(check["error"]) if check else "—",status])
     gaps="；".join(escape(f"{k} {v}") for k,v in sorted(state["gaps"].items())[-6:]) or "暂无已知缺口"
     return ('<article class="study gold-forecast" id="gold21"><h3>Au99.99 金价前瞻实验</h3>'
-            '<p>单位为元/克，时间为北京时间。每周最后一个交易日收盘后登记。63 日始终看涨基准使用训练期平均收益，预测价约为当时金价的 101.59%。</p>'+''.join(sections)+
+            '<p>单位为元/克，时间为北京时间。每周最后一个交易日收盘后登记，截止于下一交易日开市。'
+            '通常为当日 19:45，交易所公告取消节前夜盘时为复市日 08:45。缺少正式日历、数据不齐或超时均记为缺口。'
+            '63 日始终看涨基准使用训练期平均收益，预测价约为当时金价的 101.59%。</p>'+''.join(sections)+
             '<h4>逐批预测与检验</h4><p>按登记时间从早到晚排列，误差为预测价减实际收盘价。</p>'+
-            table(["登记时间","行情日","当时金价","交易日数","模型","预测价","80% 区间","预计验证日",
+            table(["登记类别","锁定时间","行情截止","抓取完成","登记截止","行情日","当时金价","交易日数","模型","版本","预测价","80% 区间","预计验证日",
                    "实际检验时间","实际价","误差","方向判断"],history)+
             f'<p>数据缺口 · {gaps}</p><p>首年复评 {REVIEW}。21 日、63 日相邻周窗口共享行情，另按不重叠窗口复核。</p>'
-            '<a href="research/gold21/ledger.json">完整登记与检验</a> · <a href="research/gold21/model.json">21 日冻结参数</a> · '
+            '<a href="research/gold21/ledger.json">完整登记与检验</a> · <a href="research/gold21/sge_calendar.json">上金所日历来源</a> · <a href="research/gold21/model.json">21 日冻结参数</a> · '
             '<a href="research/gold21/extension.json">ARIMA＋BP 与始终看涨冻结参数</a> · '
             '<a href="research/gold21/horizons.json">既有 5、63 日冻结参数与历史成绩</a> · <a href="research/experiments/gold.json">早期区间回归实验记录</a></article>')
-
-
-def launch(state,clock):
-    # A one-time live launch, independent of the regular Friday window. Never accept
-    # an origin or timestamp from the caller; require the latest confirmed close.
-    if any("records" in b for b in state["batches"]):
-        raise ValueError("三期限首批已经登记")
-    now=clock()
-    day=now.date()
-    while not trading(day) or (day==now.date() and now.time()<time(15,30)):
-        day-=timedelta(days=1)
-    if any(b["origin"]==str(day) for b in state["batches"]):
-        raise ValueError("行情日已有历史登记，禁止追补其他期限")
-    data=inputs(day)
-    locked=clock()
-    if locked.date()!=now.date() or (trading(locked.date()) and day!=locked.date()):
-        raise ValueError("登记时点已改变，需重新核实行情")
-    state["batches"].append(register(day,data,locked,"启动日实时登记"))
 
 
 def persist(previous,state):
@@ -406,6 +450,8 @@ def persist(previous,state):
                 raise ValueError("已登记的预测或检验结果不可修改")
     if any(state["settlements"].get(k)!=v for k,v in previous["settlements"].items()):
         raise ValueError("历史结算不可修改")
+    if state.get("classifications")!=previous.get("classifications"):
+        raise ValueError("审计标记不可由登记任务修改")
     if read(LEDGER)!=previous:
         raise RuntimeError("登记簿已更新，请重试")
     tmp=LEDGER.with_suffix(".tmp")
@@ -418,11 +464,6 @@ if __name__=="__main__":
     previous=read(LEDGER)
     state=copy.deepcopy(previous)
     clock=lambda: datetime.now(CN)
-    import argparse
-    parser=argparse.ArgumentParser()
-    parser.add_argument("--launch",action="store_true")
-    if parser.parse_args().launch:
-        launch(state,clock)
     update(state,clock(),clock)
     try:
         update_legacy(clock(), register_new=False)
